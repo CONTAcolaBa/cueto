@@ -14,13 +14,61 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      pages: {
+        Row: {
+          button_link: string
+          button_text: string
+          clicks: number
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          slug: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          visits: number
+        }
+        Insert: {
+          button_link?: string
+          button_text?: string
+          clicks?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          slug: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+          visits?: number
+        }
+        Update: {
+          button_link?: string
+          button_text?: string
+          clicks?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          slug?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          visits?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_page_click: { Args: { _slug: string }; Returns: undefined }
+      increment_page_visit: { Args: { _slug: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
