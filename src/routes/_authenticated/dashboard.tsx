@@ -104,7 +104,15 @@ function Dashboard() {
 
   const { data: pages = [], isLoading } = useQuery({
     queryKey: ["pages"],
-    queryFn: () => fetchPages(),
+    // Sem login ativo, a listagem pode falhar: mostramos o painel vazio.
+    queryFn: async () => {
+      try {
+        return await fetchPages();
+      } catch {
+        return [] as PageRecord[];
+      }
+    },
+    retry: false,
   });
 
   const saveMutation = useMutation({
