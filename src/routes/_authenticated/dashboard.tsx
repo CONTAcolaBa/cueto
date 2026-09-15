@@ -67,8 +67,6 @@ type FormState = {
   subtitle: string;
   description: string;
   image_url: string;
-  button_text: string;
-  button_link: string;
   slug: string;
 };
 
@@ -77,8 +75,6 @@ const emptyForm: FormState = {
   subtitle: "",
   description: "",
   image_url: "",
-  button_text: "Saiba mais",
-  button_link: "",
   slug: "",
 };
 
@@ -123,8 +119,8 @@ function Dashboard() {
         subtitle: values.subtitle,
         description: values.description,
         image_url: values.image_url,
-        button_text: values.button_text,
-        button_link: values.button_link,
+        button_text: "Fazer uma Doação",
+        button_link: "#",
       };
       return values.id
         ? update({ data: { ...payload, id: values.id } })
@@ -176,8 +172,6 @@ function Dashboard() {
       subtitle: page.subtitle ?? "",
       description: page.description ?? "",
       image_url: page.image_url ?? "",
-      button_text: page.button_text,
-      button_link: page.button_link,
       slug: page.slug,
     });
     setSlugTouched(true);
@@ -428,25 +422,6 @@ function Dashboard() {
                 onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))}
               />
             </Field>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Texto do botão" id="button_text">
-                <Input
-                  id="button_text"
-                  value={form.button_text}
-                  onChange={(e) => setForm((f) => ({ ...f, button_text: e.target.value }))}
-                />
-              </Field>
-              <Field label="Link do botão" id="button_link">
-                <Input
-                  id="button_link"
-                  type="url"
-                  placeholder="https://..."
-                  value={form.button_link}
-                  onChange={(e) => setForm((f) => ({ ...f, button_link: e.target.value }))}
-                />
-              </Field>
-            </div>
 
             {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
 

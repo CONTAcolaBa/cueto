@@ -59,6 +59,15 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-public-background: var(--public-background);
+  --color-public-foreground: var(--public-foreground);
+  --color-public-muted: var(--public-muted);
+  --color-public-muted-foreground: var(--public-muted-foreground);
+  --color-public-border: var(--public-border);
+  --color-public-placeholder: var(--public-placeholder);
+  --color-donation: var(--donation);
+  --color-donation-soft: var(--donation-soft);
+  --color-donation-foreground: var(--donation-foreground);
 }
 
 /* PageMult: professional slate/zinc dark theme with an indigo accent. */
@@ -96,6 +105,15 @@
   --sidebar-accent-foreground: oklch(0.96 0.004 265);
   --sidebar-border: oklch(0.33 0.018 265);
   --sidebar-ring: oklch(0.58 0.19 275);
+  --public-background: oklch(1 0 0);
+  --public-foreground: oklch(0.14 0.01 260);
+  --public-muted: oklch(0.95 0.005 260);
+  --public-muted-foreground: oklch(0.43 0.012 260);
+  --public-border: oklch(0.89 0.008 260);
+  --public-placeholder: oklch(0.82 0.015 250);
+  --donation: oklch(0.7 0.2 145);
+  --donation-soft: oklch(0.95 0.06 145);
+  --donation-foreground: oklch(0.99 0 0);
 }
 
 .dark {
