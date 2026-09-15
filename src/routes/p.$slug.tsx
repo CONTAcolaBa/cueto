@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { PageTemplate } from "@/components/PageTemplate";
-import { getPublicPageAndTrackVisit, trackPageClick } from "@/lib/pages.functions";
+import { getPublicPageAndTrackVisit } from "@/lib/pages.functions";
 
 export const Route = createFileRoute("/p/$slug")({
   // Server-rendered: content is fetched and the visit is counted during the
@@ -51,12 +51,5 @@ export const Route = createFileRoute("/p/$slug")({
 function PublicPage() {
   const { page } = Route.useLoaderData();
 
-  return (
-    <PageTemplate
-      page={page}
-      onCtaClick={() => {
-        void trackPageClick({ data: { slug: page.slug } }).catch(() => {});
-      }}
-    />
-  );
+  return <PageTemplate page={page} />;
 }
