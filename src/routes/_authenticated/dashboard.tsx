@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { BarChart3, Check, Copy, LogOut, MousePointerClick, Pencil, Plus, Trash2, Eye } from "lucide-react";
+import { BarChart3, Check, Copy, LogOut, MessageCircle, MousePointerClick, Pencil, Plus, Trash2, Eye } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -11,6 +11,7 @@ import {
   deletePage,
   listMyPages,
   updatePage,
+  type PageComment,
   type PageRecord,
 } from "@/lib/pages.functions";
 import { Button } from "@/components/ui/button";
@@ -68,6 +69,7 @@ type FormState = {
   description: string;
   image_url: string;
   slug: string;
+  comments: PageComment[];
 };
 
 const emptyForm: FormState = {
@@ -76,7 +78,10 @@ const emptyForm: FormState = {
   description: "",
   image_url: "",
   slug: "",
+  comments: [],
 };
+
+const emptyComment: PageComment = { image_url: "", time: "", name: "", text: "" };
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -121,6 +126,7 @@ function Dashboard() {
         image_url: values.image_url,
         button_text: "Fazer uma Doação",
         button_link: "#",
+        comments: values.comments,
       };
       return values.id
         ? update({ data: { ...payload, id: values.id } })
@@ -173,6 +179,7 @@ function Dashboard() {
       description: page.description ?? "",
       image_url: page.image_url ?? "",
       slug: page.slug,
+      comments: page.comments,
     });
     setSlugTouched(true);
     setFormError(null);
@@ -423,6 +430,84 @@ function Dashboard() {
               />
             </Field>
 
+            <section className="space-y-4 border-t border-border pt-5" aria-labelledby="comments-title">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h3 id="comments-title" className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <MessageCircle className="size-4" /> Comentários
+                  </h3>
+                  <p className="mt-1 text-xs text-muted-foreground">Opcional — adicione quantos comentários desejar.</p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setForm((current) => ({
+                    ...current,
+                    comments: [...current.comments, { ...emptyComment }],
+                  }))}
+                >
+                  <Plus className="size-4" /> Adicionar
+                </Button>
+              </div>
+
+              {form.comments.map((comment, index) => (
+                <div key={index} className="space-y-3 rounded-lg border border-border bg-secondary/30 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold text-foreground">Comentário {index + 1}</p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Remover comentário ${index + 1}`}
+                      onClick={() => setForm((current) => ({
+                        ...current,
+                        comments: current.comments.filter((_, itemIndex) => itemIndex !== index),
+                      }))}
+                    >
+                      <Trash2 className="size-4 text-destructive" />
+                    </Button>
+                  </div>
+                  <Field label="Imagem do comentário (URL)" id={`comment-image-${index}`}>
+                    <Input
+                      id={`comment-image-${index}`}
+                      type="url"
+                      placeholder="https://... (opcional)"
+                      value={comment.image_url}
+                      onChange={(event) => updateComment(index, "image_url", event.target.value)}
+                    />
+                  </Field>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Field label="Horário" id={`comment-time-${index}`}>
+                      <Input
+                        id={`comment-time-${index}`}
+                        placeholder="há 13 minutos"
+                        value={comment.time}
+                        onChange={(event) => updateComment(index, "time", event.target.value)}
+                      />
+                    </Field>
+                    <Field label="Nome" id={`comment-name-${index}`}>
+                      <Input
+                        id={`comment-name-${index}`}
+                        required
+                        value={comment.name}
+                        onChange={(event) => updateComment(index, "name", event.target.value)}
+                      />
+                    </Field>
+                  </div>
+                  <Field label="Texto" id={`comment-text-${index}`}>
+                    <Textarea
+                      id={`comment-text-${index}`}
+                      required
+                      rows={3}
+                      value={comment.text}
+                      onChange={(event) => updateComment(index, "text", event.target.value)}
+                    />
+                  </Field>
+                </div>
+              ))}
+            </section>
+
             {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
 
             <DialogFooter>
@@ -458,6 +543,15 @@ function Dashboard() {
       </AlertDialog>
     </div>
   );
+
+  function updateComment(index: number, field: keyof PageComment, value: string) {
+    setForm((current) => ({
+      ...current,
+      comments: current.comments.map((comment, itemIndex) =>
+        itemIndex === index ? { ...comment, [field]: value } : comment,
+      ),
+    }));
+  }
 }
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
