@@ -1,6 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+export type PageComment = {
+  image_url: string;
+  time: string;
+  name: string;
+  text: string;
+};
+
 export type PageRecord = {
   id: string;
   slug: string;
@@ -12,12 +19,20 @@ export type PageRecord = {
   button_link: string;
   visits: number;
   clicks: number;
+  comments: PageComment[];
   created_at: string;
 };
 
 export type PageContent = Pick<
   PageRecord,
-  "slug" | "title" | "subtitle" | "description" | "image_url" | "button_text" | "button_link"
+  | "slug"
+  | "title"
+  | "subtitle"
+  | "description"
+  | "image_url"
+  | "button_text"
+  | "button_link"
+  | "comments"
 >;
 
 export type PageInput = {
@@ -29,7 +44,25 @@ export type PageInput = {
   image_url: string;
   button_text: string;
   button_link: string;
+  comments?: PageComment[];
 };
+
+function validateComments(comments: PageComment[] | undefined): PageComment[] {
+  return (comments ?? [])
+    .map((comment) => ({
+      image_url: String(comment.image_url ?? "").trim(),
+      time: String(comment.time ?? "").trim(),
+      name: String(comment.name ?? "").trim(),
+      text: String(comment.text ?? "").trim(),
+    }))
+    .filter((comment) => comment.name || comment.text || comment.time || comment.image_url)
+    .map((comment) => {
+      if (!comment.name || !comment.text) {
+        throw new Error("Preencha o nome e o texto de cada comentário adicionado.");
+      }
+      return comment;
+    });
+}
 
 function validate(input: PageInput): PageInput {
   const slug = String(input.slug ?? "")
@@ -50,6 +83,7 @@ function validate(input: PageInput): PageInput {
     image_url: (input.image_url ?? "").trim(),
     button_text: (input.button_text ?? "").trim() || "Saiba mais",
     button_link: (input.button_link ?? "").trim() || "#",
+    comments: validateComments(input.comments),
   };
 }
 
@@ -68,7 +102,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
 
     const { data: page, error } = await supabaseAdmin
       .from("pages")
-      .select("slug, title, subtitle, description, image_url, button_text, button_link")
+      .select("slug, title, subtitle, description, image_url, button_text, button_link, comments")
       .eq("slug", data.slug)
       .maybeSingle();
 
@@ -76,7 +110,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
 
     await supabaseAdmin.rpc("increment_page_visit", { _slug: data.slug });
 
-    return page as PageContent;
+    return { ...page, comments: (page.comments ?? []) as PageComment[] } as PageContent;
   });
 
 /** Public: CTA click tracking, called from the browser on click. */
@@ -94,13 +128,16 @@ export const listMyPages = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("pages")
       .select(
-        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, created_at",
+        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, comments, created_at",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
 
     if (error) throw new Error(error.message);
-    return (data ?? []) as PageRecord[];
+    return (data ?? []).map((page) => ({
+      ...page,
+      comments: (page.comments ?? []) as PageComment[],
+    })) as PageRecord[];
   });
 
 export const createPage = createServerFn({ method: "POST" })
@@ -116,6 +153,7 @@ export const createPage = createServerFn({ method: "POST" })
       image_url: data.image_url || null,
       button_text: data.button_text,
       button_link: data.button_link,
+      comments: data.comments ?? [],
     });
 
     if (error) {
@@ -132,6 +170,8 @@ export const updatePage = createServerFn({ method: "POST" })
     return validate(data);
   })
   .handler(async ({ data, context }) => {
+    if (!data.id) throw new Error("Página inválida.");
+    const pageId = data.id;
     const { error } = await context.supabase
       .from("pages")
       .update({
@@ -142,8 +182,9 @@ export const updatePage = createServerFn({ method: "POST" })
         image_url: data.image_url || null,
         button_text: data.button_text,
         button_link: data.button_link,
+        comments: data.comments ?? [],
       })
-      .eq("id", data.id!)
+      .eq("id", pageId)
       .eq("user_id", context.userId);
 
     if (error) {

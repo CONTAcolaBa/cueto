@@ -1,4 +1,5 @@
-import type { PageContent } from "@/lib/pages.functions";
+import { useEffect, useState } from "react";
+import type { PageComment, PageContent } from "@/lib/pages.functions";
 import { Heart, Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -99,7 +100,93 @@ export function PageTemplate({ page }: { page: PageContent }) {
             {page.description}
           </p>
         ) : null}
+
+        {page.comments.length > 0 ? <CommentCarousel comments={page.comments} /> : null}
       </article>
     </main>
+  );
+}
+
+function getInitials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+function CommentCarousel({ comments }: { comments: PageComment[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (comments.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const interval = window.setInterval(
+      () => setActiveIndex((current) => (current + 1) % comments.length),
+      3000,
+    );
+    return () => window.clearInterval(interval);
+  }, [comments.length]);
+
+  return (
+    <section className="mt-12" aria-label="Comentários de doadores" aria-live="polite">
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-out motion-reduce:transition-none"
+          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+        >
+          {comments.map((comment, index) => (
+            <article
+              key={`${comment.name}-${index}`}
+              className="min-h-48 min-w-full rounded-lg border border-donation bg-public-background px-5 py-5 shadow-sm sm:px-7"
+              aria-hidden={index !== activeIndex}
+            >
+              <div className="flex items-start gap-4">
+                {comment.image_url ? (
+                  <img
+                    src={comment.image_url}
+                    alt={`Foto de ${comment.name}`}
+                    className="size-14 shrink-0 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-public-muted text-base font-semibold text-public-foreground">
+                    {getInitials(comment.name)}
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="font-bold text-public-foreground">{comment.name}</h2>
+                    <span className="rounded-full bg-donation px-3 py-1 text-xs font-semibold text-donation-foreground">
+                      ✓ Doador(a)
+                    </span>
+                  </div>
+                  {comment.time ? <p className="mt-1 text-sm text-public-muted-foreground">{comment.time}</p> : null}
+                  <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-public-foreground">
+                    {comment.text}
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      {comments.length > 1 ? (
+        <div className="mt-4 flex justify-center gap-2" aria-label={`Comentário ${activeIndex + 1} de ${comments.length}`}>
+          {comments.map((item, index) => (
+            <Button
+              key={`${item.name}-${index}`}
+              type="button"
+              variant="ghost"
+              size="icon"
+              className={`size-5 rounded-full p-0 hover:bg-public-muted ${index === activeIndex ? "bg-donation" : "bg-public-placeholder"}`}
+              aria-label={`Mostrar comentário ${index + 1}`}
+              aria-current={index === activeIndex ? "true" : undefined}
+              onClick={() => setActiveIndex(index)}
+            />
+          ))}
+        </div>
+      ) : null}
+    </section>
   );
 }
