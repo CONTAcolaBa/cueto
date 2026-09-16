@@ -19,6 +19,7 @@ export type Database = {
           button_link: string
           button_text: string
           clicks: number
+          comments: Json
           created_at: string
           description: string | null
           id: string
@@ -34,6 +35,7 @@ export type Database = {
           button_link?: string
           button_text?: string
           clicks?: number
+          comments?: Json
           created_at?: string
           description?: string | null
           id?: string
@@ -49,6 +51,7 @@ export type Database = {
           button_link?: string
           button_text?: string
           clicks?: number
+          comments?: Json
           created_at?: string
           description?: string | null
           id?: string
