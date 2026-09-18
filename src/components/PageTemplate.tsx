@@ -4,6 +4,7 @@ import type { PageComment, PageContent } from "@/lib/pages.functions";
 import { Building2, Facebook, Heart, Instagram, Mail, MapPin, Menu, Pin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import unionBackground from "@/assets/union-background.webp.asset.json";
 
 /**
  * Fixed public microsite template.
@@ -104,6 +105,31 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
         {page.comments.length > 0 ? <CommentCarousel comments={page.comments} /> : null}
       </article>
+
+      <section
+        className="relative isolate overflow-hidden"
+        aria-label="Mensagem de união"
+      >
+        <img
+          src={unionBackground.url}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 size-full object-cover"
+        />
+        <div
+          className="absolute inset-0 -z-10 bg-donation/85 mix-blend-multiply"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 -z-10 bg-gradient-to-b from-donation/40 via-transparent to-donation/60"
+          aria-hidden="true"
+        />
+        <div className="mx-auto flex w-full max-w-3xl items-center justify-center px-5 py-20 sm:px-8 sm:py-28">
+          <p className="max-w-xl text-center text-2xl font-bold leading-snug text-donation-foreground drop-shadow-sm sm:text-3xl">
+            Não interessa o tamanho do desafio, o que importa é a grandeza da união.
+          </p>
+        </div>
+      </section>
 
       <footer className="border-t border-public-border bg-public-muted">
         <div className="mx-auto grid w-full max-w-3xl gap-10 px-5 py-12 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] sm:px-8">
