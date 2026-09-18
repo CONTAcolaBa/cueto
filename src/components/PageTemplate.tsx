@@ -117,12 +117,15 @@ export function PageTemplate({ page }: { page: PageContent }) {
           className="absolute inset-0 -z-10 size-full object-cover"
         />
         <div
-          className="absolute inset-0 -z-10 bg-donation/80 mix-blend-multiply"
+          className="absolute inset-0 -z-10 bg-donation/85 mix-blend-multiply"
           aria-hidden="true"
         />
-        <div className="absolute inset-0 -z-10 bg-public-background/30" aria-hidden="true" />
+        <div
+          className="absolute inset-0 -z-10 bg-gradient-to-b from-donation/40 via-transparent to-donation/60"
+          aria-hidden="true"
+        />
         <div className="mx-auto flex w-full max-w-3xl items-center justify-center px-5 py-20 sm:px-8 sm:py-28">
-          <p className="max-w-xl text-center text-2xl font-light font-bold leading-snug text-donation-foreground sm:text-3xl">
+          <p className="max-w-xl text-center text-2xl font-bold leading-snug text-donation-foreground drop-shadow-sm sm:text-3xl">
             Não interessa o tamanho do desafio, o que importa é a grandeza da união.
           </p>
         </div>
