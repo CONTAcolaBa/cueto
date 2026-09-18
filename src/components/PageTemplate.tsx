@@ -106,6 +106,28 @@ export function PageTemplate({ page }: { page: PageContent }) {
         {page.comments.length > 0 ? <CommentCarousel comments={page.comments} /> : null}
       </article>
 
+      <section
+        className="relative isolate overflow-hidden"
+        aria-label="Mensagem de união"
+      >
+        <img
+          src={unionBackground.url}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 size-full object-cover"
+        />
+        <div
+          className="absolute inset-0 -z-10 bg-donation/80 mix-blend-multiply"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 -z-10 bg-public-background/30" aria-hidden="true" />
+        <div className="mx-auto flex w-full max-w-3xl items-center justify-center px-5 py-20 sm:px-8 sm:py-28">
+          <p className="max-w-xl text-center text-2xl font-light leading-snug text-donation-foreground sm:text-3xl">
+            <span className="font-bold">Não interessa o tamanho do desafio, o que importa é a grandeza da união.</span>
+          </p>
+        </div>
+      </section>
+
       <footer className="border-t border-public-border bg-public-muted">
         <div className="mx-auto grid w-full max-w-3xl gap-10 px-5 py-12 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] sm:px-8">
           <div>
