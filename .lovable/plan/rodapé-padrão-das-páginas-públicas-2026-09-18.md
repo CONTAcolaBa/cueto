@@ -1,9 +1,11 @@
 # Rodapé padrão das páginas públicas
 
 ## Objetivo
+
 Adicionar automaticamente, em todas as páginas `/p/:slug`, um rodapé fixo integrado ao modelo público.
 
 ## Alterações
+
 - Incluir o rodapé no componente único que gera todas as páginas públicas.
 - Reservar uma área visual para a futura logo.
 - Exibir dados fictícios iniciais de localização, CNPJ, contato e copyright.
@@ -11,13 +13,15 @@ Adicionar automaticamente, em todas as páginas `/p/:slug`, um rodapé fixo inte
 - Manter o rodapé responsivo, legível e coerente com o visual branco e verde atual.
 
 ## Conteúdo inicial fictício
-- Localização: São Paulo — SP, Brasil
-- CNPJ: 00.000.000/0001-00
-- Contato: contato@exemplo.com.br
+
+- Sede: Rua Elvira Ferraz, nº 440 Itaim Bibi, São Paulo, SP
+- CNPJ: 47.967.950/0001-22
+- Contato: [acao@solidaria.com](mailto:contato@exemplo.com.br)
 - Copyright: © 2026 Todos os direitos reservados.
-- Redes: Instagram, Facebook e WhatsApp
+- Redes: Instagram, Facebook e Pinterest 
 
 ## Validação
+
 - Conferir uma página pública em telas de celular e computador.
 - Confirmar que não há sobreposição, corte ou rolagem horizontal.
 - Confirmar que todas as páginas existentes recebem o rodapé automaticamente.
