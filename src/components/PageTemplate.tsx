@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { PageComment, PageContent } from "@/lib/pages.functions";
-import { Heart, Menu } from "lucide-react";
+import { Building2, Facebook, Heart, Instagram, Mail, MapPin, Menu, Pin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -103,7 +103,75 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
         {page.comments.length > 0 ? <CommentCarousel comments={page.comments} /> : null}
       </article>
+
+      <footer className="border-t border-public-border bg-public-muted">
+        <div className="mx-auto grid w-full max-w-3xl gap-10 px-5 py-12 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] sm:px-8">
+          <div>
+            <div
+              className="flex h-16 w-40 items-center justify-center rounded-lg border border-public-border bg-public-placeholder"
+              aria-label="Espaço reservado para a futura logo"
+            >
+              <span className="text-xs font-semibold uppercase text-public-muted-foreground">Logo</span>
+            </div>
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-public-muted-foreground">
+              Juntos, transformamos solidariedade em esperança.
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-base font-extrabold text-public-foreground">Informações institucionais</h2>
+            <address className="mt-5 grid gap-4 not-italic text-sm leading-relaxed text-public-muted-foreground">
+              <div className="flex items-start gap-3">
+                <MapPin className="mt-0.5 size-5 shrink-0 text-donation" aria-hidden="true" />
+                <span>Rua Elvira Ferraz, nº 440, Itaim Bibi, São Paulo, SP</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <Building2 className="mt-0.5 size-5 shrink-0 text-donation" aria-hidden="true" />
+                <span>CNPJ: 47.967.950/0001-22</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <Mail className="mt-0.5 size-5 shrink-0 text-donation" aria-hidden="true" />
+                <span>acao@solidaria.com</span>
+              </div>
+            </address>
+
+            <div className="mt-7 flex items-center gap-2" aria-label="Redes sociais">
+              <SocialIcon label="Instagram">
+                <Instagram className="size-5" />
+              </SocialIcon>
+              <SocialIcon label="Facebook">
+                <Facebook className="size-5" />
+              </SocialIcon>
+              <SocialIcon label="Pinterest">
+                <Pin className="size-5" />
+              </SocialIcon>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-public-border">
+          <p className="mx-auto w-full max-w-3xl px-5 py-5 text-center text-xs text-public-muted-foreground sm:px-8">
+            © 2026 Todos os direitos reservados.
+          </p>
+        </div>
+      </footer>
     </main>
+  );
+}
+
+function SocialIcon({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="icon"
+      className="size-10 rounded-full border-public-border bg-public-background text-public-foreground hover:bg-public-background"
+      aria-label={label}
+      aria-disabled="true"
+      tabIndex={-1}
+    >
+      {children}
+    </Button>
   );
 }
 
