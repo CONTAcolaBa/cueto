@@ -4,6 +4,7 @@ import type { PageComment, PageContent } from "@/lib/pages.functions";
 import { Building2, Facebook, Heart, Instagram, Mail, MapPin, Menu, Pin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import unionBackground from "@/assets/union-background.webp.asset.json";
 
 /**
  * Fixed public microsite template.
