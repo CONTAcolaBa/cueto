@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import type { PageComment, PageContent } from "@/lib/pages.functions";
 import { Building2, Facebook, Heart, Instagram, Mail, MapPin, Menu, Pin } from "lucide-react";
 
@@ -159,7 +160,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
   );
 }
 
-function SocialIcon({ label, children }: { label: string; children: React.ReactNode }) {
+function SocialIcon({ label, children }: { label: string; children: ReactNode }) {
   return (
     <Button
       type="button"
