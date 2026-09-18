@@ -122,8 +122,8 @@ export function PageTemplate({ page }: { page: PageContent }) {
         />
         <div className="absolute inset-0 -z-10 bg-public-background/30" aria-hidden="true" />
         <div className="mx-auto flex w-full max-w-3xl items-center justify-center px-5 py-20 sm:px-8 sm:py-28">
-          <p className="max-w-xl text-center text-2xl font-light leading-snug text-donation-foreground sm:text-3xl">
-            <span className="font-bold">Não interessa o tamanho do desafio, o que importa é a grandeza da união.</span>
+          <p className="max-w-xl text-center text-2xl font-light font-bold leading-snug text-donation-foreground sm:text-3xl">
+            Não interessa o tamanho do desafio, o que importa é a grandeza da união.
           </p>
         </div>
       </section>
