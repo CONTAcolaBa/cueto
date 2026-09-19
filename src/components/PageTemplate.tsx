@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import type { PageComment, PageContent } from "@/lib/pages.functions";
+import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
 import { Building2, Facebook, Heart, Instagram, Mail, MapPin, Menu, Pin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -103,6 +103,8 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </p>
         ) : null}
 
+        {page.faqs.length > 0 ? <FaqSection faqs={page.faqs} /> : null}
+
         {page.comments.length > 0 ? <CommentCarousel comments={page.comments} /> : null}
       </article>
 
@@ -199,6 +201,27 @@ function SocialIcon({ label, children }: { label: string; children: ReactNode })
     >
       {children}
     </Button>
+  );
+}
+
+function FaqSection({ faqs }: { faqs: PageFaq[] }) {
+  return (
+    <section className="mt-12" aria-label="Perguntas Frequentes">
+      <h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Perguntas Frequentes</h2>
+      <dl className="mt-6 grid gap-4">
+        {faqs.map((faq, index) => (
+          <div
+            key={`${faq.question}-${index}`}
+            className="rounded-lg border border-public-border bg-public-background px-5 py-5 shadow-sm sm:px-7"
+          >
+            <dt className="text-lg font-bold leading-snug text-public-foreground">{faq.question}</dt>
+            <dd className="mt-2 whitespace-pre-line text-base leading-relaxed text-public-muted-foreground">
+              {faq.answer}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   );
 }
 
