@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { BarChart3, Check, Copy, LogOut, MessageCircle, MousePointerClick, Pencil, Plus, Trash2, Eye } from "lucide-react";
+import { BarChart3, Check, Copy, HelpCircle, LogOut, MessageCircle, MousePointerClick, Pencil, Plus, Trash2, Eye } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -12,6 +12,7 @@ import {
   listMyPages,
   updatePage,
   type PageComment,
+  type PageFaq,
   type PageRecord,
 } from "@/lib/pages.functions";
 import { Button } from "@/components/ui/button";
@@ -70,6 +71,7 @@ type FormState = {
   image_url: string;
   slug: string;
   comments: PageComment[];
+  faqs: PageFaq[];
 };
 
 const emptyForm: FormState = {
@@ -79,9 +81,11 @@ const emptyForm: FormState = {
   image_url: "",
   slug: "",
   comments: [],
+  faqs: [],
 };
 
 const emptyComment: PageComment = { image_url: "", time: "", name: "", text: "" };
+const emptyFaq: PageFaq = { question: "", answer: "" };
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -127,6 +131,7 @@ function Dashboard() {
         button_text: "Fazer uma Doação",
         button_link: "#",
         comments: values.comments,
+        faqs: values.faqs,
       };
       return values.id
         ? update({ data: { ...payload, id: values.id } })
@@ -180,6 +185,7 @@ function Dashboard() {
       image_url: page.image_url ?? "",
       slug: page.slug,
       comments: page.comments,
+      faqs: page.faqs ?? [],
     });
     setSlugTouched(true);
     setFormError(null);
@@ -430,6 +436,65 @@ function Dashboard() {
               />
             </Field>
 
+            <section className="space-y-4 border-t border-border pt-5" aria-labelledby="faqs-title">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h3 id="faqs-title" className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <HelpCircle className="size-4" /> Perguntas Frequentes
+                  </h3>
+                  <p className="mt-1 text-xs text-muted-foreground">Opcional — adicione quantas perguntas desejar.</p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setForm((current) => ({
+                    ...current,
+                    faqs: [...current.faqs, { ...emptyFaq }],
+                  }))}
+                >
+                  <Plus className="size-4" /> Adicionar
+                </Button>
+              </div>
+
+              {form.faqs.map((faq, index) => (
+                <div key={index} className="space-y-3 rounded-lg border border-border bg-secondary/30 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold text-foreground">Pergunta {index + 1}</p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Remover pergunta ${index + 1}`}
+                      onClick={() => setForm((current) => ({
+                        ...current,
+                        faqs: current.faqs.filter((_, itemIndex) => itemIndex !== index),
+                      }))}
+                    >
+                      <Trash2 className="size-4 text-destructive" />
+                    </Button>
+                  </div>
+                  <Field label="Pergunta" id={`faq-question-${index}`}>
+                    <Input
+                      id={`faq-question-${index}`}
+                      required
+                      value={faq.question}
+                      onChange={(event) => updateFaq(index, "question", event.target.value)}
+                    />
+                  </Field>
+                  <Field label="Resposta" id={`faq-answer-${index}`}>
+                    <Textarea
+                      id={`faq-answer-${index}`}
+                      required
+                      rows={3}
+                      value={faq.answer}
+                      onChange={(event) => updateFaq(index, "answer", event.target.value)}
+                    />
+                  </Field>
+                </div>
+              ))}
+            </section>
+
             <section className="space-y-4 border-t border-border pt-5" aria-labelledby="comments-title">
               <div className="flex items-center justify-between gap-3">
                 <div>
@@ -543,6 +608,15 @@ function Dashboard() {
       </AlertDialog>
     </div>
   );
+
+  function updateFaq(index: number, field: keyof PageFaq, value: string) {
+    setForm((current) => ({
+      ...current,
+      faqs: current.faqs.map((faq, itemIndex) =>
+        itemIndex === index ? { ...faq, [field]: value } : faq,
+      ),
+    }));
+  }
 
   function updateComment(index: number, field: keyof PageComment, value: string) {
     setForm((current) => ({
