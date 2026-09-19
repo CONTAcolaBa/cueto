@@ -22,6 +22,7 @@ export type Database = {
           comments: Json
           created_at: string
           description: string | null
+          faqs: Json
           id: string
           image_url: string | null
           slug: string
@@ -38,6 +39,7 @@ export type Database = {
           comments?: Json
           created_at?: string
           description?: string | null
+          faqs?: Json
           id?: string
           image_url?: string | null
           slug: string
@@ -54,6 +56,7 @@ export type Database = {
           comments?: Json
           created_at?: string
           description?: string | null
+          faqs?: Json
           id?: string
           image_url?: string | null
           slug?: string
