@@ -8,6 +8,11 @@ export type PageComment = {
   text: string;
 };
 
+export type PageFaq = {
+  question: string;
+  answer: string;
+};
+
 export type PageRecord = {
   id: string;
   slug: string;
@@ -20,6 +25,7 @@ export type PageRecord = {
   visits: number;
   clicks: number;
   comments: PageComment[];
+  faqs: PageFaq[];
   created_at: string;
 };
 
@@ -33,6 +39,7 @@ export type PageContent = Pick<
   | "button_text"
   | "button_link"
   | "comments"
+  | "faqs"
 >;
 
 export type PageInput = {
@@ -45,6 +52,7 @@ export type PageInput = {
   button_text: string;
   button_link: string;
   comments?: PageComment[];
+  faqs?: PageFaq[];
 };
 
 function validateComments(comments: PageComment[] | undefined): PageComment[] {
@@ -61,6 +69,21 @@ function validateComments(comments: PageComment[] | undefined): PageComment[] {
         throw new Error("Preencha o nome e o texto de cada comentário adicionado.");
       }
       return comment;
+    });
+}
+
+function validateFaqs(faqs: PageFaq[] | undefined): PageFaq[] {
+  return (faqs ?? [])
+    .map((faq) => ({
+      question: String(faq.question ?? "").trim(),
+      answer: String(faq.answer ?? "").trim(),
+    }))
+    .filter((faq) => faq.question || faq.answer)
+    .map((faq) => {
+      if (!faq.question || !faq.answer) {
+        throw new Error("Preencha a pergunta e a resposta de cada FAQ adicionada.");
+      }
+      return faq;
     });
 }
 
@@ -84,6 +107,7 @@ function validate(input: PageInput): PageInput {
     button_text: (input.button_text ?? "").trim() || "Saiba mais",
     button_link: (input.button_link ?? "").trim() || "#",
     comments: validateComments(input.comments),
+    faqs: validateFaqs(input.faqs),
   };
 }
 
@@ -102,7 +126,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
 
     const { data: page, error } = await supabaseAdmin
       .from("pages")
-      .select("slug, title, subtitle, description, image_url, button_text, button_link, comments")
+      .select("slug, title, subtitle, description, image_url, button_text, button_link, comments, faqs")
       .eq("slug", data.slug)
       .maybeSingle();
 
@@ -110,7 +134,11 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
 
     await supabaseAdmin.rpc("increment_page_visit", { _slug: data.slug });
 
-    return { ...page, comments: (page.comments ?? []) as PageComment[] } as PageContent;
+    return {
+      ...page,
+      comments: (page.comments ?? []) as PageComment[],
+      faqs: (page.faqs ?? []) as PageFaq[],
+    } as PageContent;
   });
 
 /** Public: CTA click tracking, called from the browser on click. */
@@ -128,7 +156,7 @@ export const listMyPages = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("pages")
       .select(
-        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, comments, created_at",
+        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, comments, faqs, created_at",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
@@ -137,6 +165,7 @@ export const listMyPages = createServerFn({ method: "GET" })
     return (data ?? []).map((page) => ({
       ...page,
       comments: (page.comments ?? []) as PageComment[],
+      faqs: (page.faqs ?? []) as PageFaq[],
     })) as PageRecord[];
   });
 
@@ -154,6 +183,7 @@ export const createPage = createServerFn({ method: "POST" })
       button_text: data.button_text,
       button_link: data.button_link,
       comments: data.comments ?? [],
+      faqs: data.faqs ?? [],
     });
 
     if (error) {
@@ -183,6 +213,7 @@ export const updatePage = createServerFn({ method: "POST" })
         button_text: data.button_text,
         button_link: data.button_link,
         comments: data.comments ?? [],
+      faqs: data.faqs ?? [],
       })
       .eq("id", pageId)
       .eq("user_id", context.userId);
