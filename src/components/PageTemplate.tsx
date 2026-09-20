@@ -49,7 +49,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
           />
         )}
 
-        <h1 className="mt-4 text-[48px] font-extrabold leading-tight">{page.title}</h1>
+        <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">{page.title}</h1>
 
         <section className="mt-6" aria-label="Arrecadação">
           <p className="text-base text-public-muted-foreground">Arrecadados</p>
@@ -91,14 +91,14 @@ export function PageTemplate({ page }: { page: PageContent }) {
         </div>
 
         {page.subtitle ? (
-          <h2 className="mt-8 flex items-start gap-3 text-[25px] font-extrabold leading-tight">
+          <h2 className="mt-8 flex items-start gap-3 text-2xl font-extrabold leading-tight sm:text-3xl">
             <Heart className="mt-0.5 size-7 shrink-0 fill-donation text-donation" aria-hidden="true" />
             <span>{page.subtitle}</span>
           </h2>
         ) : null}
 
         {page.description ? (
-          <p className="mt-6 whitespace-pre-line text-[18px] font-medium leading-relaxed text-public-muted-foreground">
+          <p className="mt-6 whitespace-pre-line text-lg font-medium leading-relaxed text-public-muted-foreground">
             {page.description}
           </p>
         ) : null}
