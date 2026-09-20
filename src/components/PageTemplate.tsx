@@ -39,17 +39,17 @@ export function PageTemplate({ page }: { page: PageContent }) {
           <img
             src={page.image_url}
             alt={page.title}
-            className="aspect-[6/5] w-full rounded-lg bg-public-placeholder object-cover"
+            className="aspect-[6/5] w-full rounded-[16px] bg-public-placeholder object-cover"
           />
         ) : (
           <div
-            className="aspect-[6/5] w-full rounded-lg bg-public-placeholder"
+            className="aspect-[6/5] w-full rounded-[16px] bg-public-placeholder"
             role="img"
             aria-label="Imagem ainda não adicionada"
           />
         )}
 
-        <h1 className="mt-7 text-4xl font-extrabold leading-tight sm:text-5xl">{page.title}</h1>
+        <h1 className="mt-4 text-[48px] font-extrabold leading-tight">{page.title}</h1>
 
         <section className="mt-14" aria-label="Arrecadação">
           <p className="text-base text-public-muted-foreground">Arrecadados</p>
