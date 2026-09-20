@@ -51,11 +51,11 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
         <h1 className="mt-4 text-[48px] font-extrabold leading-tight">{page.title}</h1>
 
-        <section className="mt-14" aria-label="Arrecadação">
+        <section className="mt-6" aria-label="Arrecadação">
           <p className="text-base text-public-muted-foreground">Arrecadados</p>
-          <p className="mt-2 text-2xl font-extrabold sm:text-3xl">R$ 713,00 de R$ 45.000,00</p>
+          <p className="mt-1 text-2xl font-extrabold sm:text-3xl">R$ 713,00 de R$ 45.000,00</p>
           <div
-            className="mt-5 h-2 overflow-hidden rounded-full bg-public-muted"
+            className="mt-3 h-2 overflow-hidden rounded-full bg-public-muted"
             role="progressbar"
             aria-label="Progresso da arrecadação"
             aria-valuemin={0}
@@ -64,9 +64,9 @@ export function PageTemplate({ page }: { page: PageContent }) {
           >
             <div className="h-full w-[1.58%] min-w-2 rounded-full bg-donation" />
           </div>
-          <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 text-base text-public-muted-foreground">
+          <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 text-base text-public-muted-foreground">
             <span>19 doações</span>
-            <span className="rounded-full bg-donation-soft px-3 py-1 font-semibold text-donation">1,58%</span>
+            <span className="rounded-full bg-donation-soft px-2 py-0.5 text-xs font-semibold text-donation">1,58%</span>
           </div>
         </section>
 
