@@ -39,23 +39,23 @@ export function PageTemplate({ page }: { page: PageContent }) {
           <img
             src={page.image_url}
             alt={page.title}
-            className="aspect-[6/5] w-full rounded-lg bg-public-placeholder object-cover"
+            className="aspect-[6/5] w-full rounded-[16px] bg-public-placeholder object-cover"
           />
         ) : (
           <div
-            className="aspect-[6/5] w-full rounded-lg bg-public-placeholder"
+            className="aspect-[6/5] w-full rounded-[16px] bg-public-placeholder"
             role="img"
             aria-label="Imagem ainda não adicionada"
           />
         )}
 
-        <h1 className="mt-7 text-4xl font-extrabold leading-tight sm:text-5xl">{page.title}</h1>
+        <h1 className="mt-4 text-[48px] font-extrabold leading-tight">{page.title}</h1>
 
-        <section className="mt-14" aria-label="Arrecadação">
+        <section className="mt-6" aria-label="Arrecadação">
           <p className="text-base text-public-muted-foreground">Arrecadados</p>
-          <p className="mt-2 text-2xl font-extrabold sm:text-3xl">R$ 713,00 de R$ 45.000,00</p>
+          <p className="mt-1 text-2xl font-extrabold sm:text-3xl">R$ 713,00 de R$ 45.000,00</p>
           <div
-            className="mt-5 h-2 overflow-hidden rounded-full bg-public-muted"
+            className="mt-3 h-2 overflow-hidden rounded-full bg-public-muted"
             role="progressbar"
             aria-label="Progresso da arrecadação"
             aria-valuemin={0}
@@ -64,16 +64,16 @@ export function PageTemplate({ page }: { page: PageContent }) {
           >
             <div className="h-full w-[1.58%] min-w-2 rounded-full bg-donation" />
           </div>
-          <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 text-base text-public-muted-foreground">
+          <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 text-base text-public-muted-foreground">
             <span>19 doações</span>
-            <span className="rounded-full bg-donation-soft px-3 py-1 font-semibold text-donation">1,58%</span>
+            <span className="rounded-full bg-donation-soft px-2 py-0.5 text-xs font-semibold text-donation">1,58%</span>
           </div>
         </section>
 
-        <div className="mt-10 grid gap-4">
+        <div className="mt-6 grid gap-3">
           <Button
             type="button"
-            className="h-14 w-full bg-donation text-lg font-bold text-donation-foreground hover:bg-donation"
+            className="h-14 w-full rounded-[5px] bg-donation text-lg font-bold text-donation-foreground hover:bg-donation"
             aria-disabled="true"
             tabIndex={-1}
           >
@@ -82,7 +82,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
           <Button
             type="button"
             variant="outline"
-            className="h-14 w-full border-2 border-donation bg-public-background text-lg font-bold text-donation hover:bg-public-background"
+            className="h-14 w-full rounded-[5px] border-2 border-donation bg-public-background text-lg font-bold text-donation hover:bg-public-background"
             aria-disabled="true"
             tabIndex={-1}
           >
@@ -91,14 +91,14 @@ export function PageTemplate({ page }: { page: PageContent }) {
         </div>
 
         {page.subtitle ? (
-          <h2 className="mt-12 flex items-start gap-3 text-2xl font-extrabold leading-tight sm:text-3xl">
-            <Heart className="mt-0.5 size-8 shrink-0 fill-donation text-donation" aria-hidden="true" />
+          <h2 className="mt-8 flex items-start gap-3 text-[25px] font-extrabold leading-tight">
+            <Heart className="mt-0.5 size-7 shrink-0 fill-donation text-donation" aria-hidden="true" />
             <span>{page.subtitle}</span>
           </h2>
         ) : null}
 
         {page.description ? (
-          <p className="mt-12 whitespace-pre-line text-lg font-medium leading-relaxed text-public-muted-foreground">
+          <p className="mt-6 whitespace-pre-line text-[18px] font-medium leading-relaxed text-public-muted-foreground">
             {page.description}
           </p>
         ) : null}
