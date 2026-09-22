@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
-import { ChevronDown, Heart, Menu } from "lucide-react";
+import { Check, ChevronDown, Heart, Menu, Send, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import unionBackground from "@/assets/union-background.webp.asset.json";
 
 /**
@@ -11,44 +12,98 @@ import unionBackground from "@/assets/union-background.webp.asset.json";
  * without touching any other logic in the app.
  */
 export function PageTemplate({ page }: { page: PageContent }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    function closeMenu(event: MouseEvent | KeyboardEvent) {
+      if (event instanceof KeyboardEvent) {
+        if (event.key === "Escape") setMenuOpen(false);
+        return;
+      }
+      if (!menuRef.current?.contains(event.target as Node)) setMenuOpen(false);
+    }
+
+    document.addEventListener("mousedown", closeMenu);
+    document.addEventListener("keydown", closeMenu);
+    return () => {
+      document.removeEventListener("mousedown", closeMenu);
+      document.removeEventListener("keydown", closeMenu);
+    };
+  }, [menuOpen]);
+
   return (
-    <main className="min-h-screen bg-public-background text-public-foreground">
+    <main className="min-h-screen overflow-x-hidden bg-public-background text-public-foreground">
       <header className="border-b border-public-border bg-public-background shadow-sm">
-        <div className="mx-auto grid h-24 w-full max-w-4xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:h-28 sm:px-6">
+        <div className="relative mx-auto grid h-24 w-full max-w-4xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:h-28 sm:px-6">
           <div
             className="h-12 w-32 rounded-lg bg-public-placeholder sm:h-14 sm:w-40"
             aria-label="Espaço reservado para a futura logo"
           />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="shrink-0 text-public-foreground hover:bg-public-muted"
-            aria-label="Menu"
-            aria-disabled="true"
-            tabIndex={-1}
-          >
-            <Menu className="size-7" />
-          </Button>
+          <div ref={menuRef} className="relative">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="shrink-0 text-public-foreground hover:bg-public-muted"
+              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={menuOpen}
+              aria-controls="public-quick-menu"
+              onClick={() => setMenuOpen((current) => !current)}
+            >
+              {menuOpen ? <X className="size-7" /> : <Menu className="size-7" />}
+            </Button>
+
+            {menuOpen ? (
+              <nav
+                id="public-quick-menu"
+                className="absolute right-0 top-12 z-30 w-64 overflow-hidden rounded-lg border border-public-border bg-public-background py-2 shadow-xl"
+                aria-label="Links rápidos"
+              >
+                {[
+                  "INICIAL",
+                  "QUEM SOMOS",
+                  "NOSSO PROPÓSITO",
+                  "OUTRAS VAQUINHAS",
+                ].map((label) => (
+                  <span
+                    key={label}
+                    className="block px-5 py-3 text-sm font-semibold text-public-foreground"
+                    aria-disabled="true"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </nav>
+            ) : null}
+          </div>
         </div>
       </header>
 
       <article className="mx-auto w-full max-w-4xl px-4 pb-20 pt-7 sm:px-6 sm:pt-10">
-        {page.image_url ? (
-          <img
-            src={page.image_url}
-            alt={page.title}
-            className="aspect-[6/5] w-full rounded-[16px] bg-public-placeholder object-cover"
-          />
-        ) : (
-          <div
-            className="aspect-[6/5] w-full rounded-[16px] bg-public-placeholder"
-            role="img"
-            aria-label="Imagem ainda não adicionada"
-          />
-        )}
+        <div className="relative">
+          {page.image_url ? (
+            <img
+              src={page.image_url}
+              alt={page.title}
+              className="aspect-[6/5] w-full rounded-[16px] bg-public-placeholder object-cover"
+            />
+          ) : (
+            <div
+              className="aspect-[6/5] w-full rounded-[16px] bg-public-placeholder"
+              role="img"
+              aria-label="Imagem ainda não adicionada"
+            />
+          )}
+          <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-public-background px-3 py-1.5 text-sm font-semibold text-public-foreground shadow-md">
+            <Check className="size-4 text-donation" strokeWidth={3} aria-hidden="true" />
+            verificada
+          </span>
+        </div>
 
-        <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl">{page.title}</h1>
+        <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl">{page.title}</h1>
 
         <section className="mt-6" aria-label="Arrecadação">
           <p className="text-base text-public-muted-foreground">Arrecadados</p>
@@ -90,7 +145,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
         </div>
 
         {page.subtitle ? (
-          <h2 className="mt-8 flex items-start gap-3 text-2xl font-extrabold leading-tight sm:text-3xl">
+          <h2 className="mt-8 flex items-start gap-3 text-xl font-normal leading-tight sm:text-2xl">
             <Heart className="mt-0.5 size-7 shrink-0 fill-donation text-donation" aria-hidden="true" />
             <span>{page.subtitle}</span>
           </h2>
@@ -102,11 +157,11 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </p>
         ) : null}
 
+        <CommentsSection comments={page.comments} />
+
         <TransparencySection />
 
         {page.faqs.length > 0 ? <FaqSection faqs={page.faqs} /> : null}
-
-        {page.comments.length > 0 ? <CommentCarousel comments={page.comments} /> : null}
       </article>
 
       <section
@@ -194,16 +249,21 @@ function FooterLink({ label }: { label: string }) {
 
 function TransparencySection() {
   return (
-    <section className="mt-10 bg-transparency-background px-4 py-6 sm:px-6" aria-labelledby="transparency-title">
-      <h2 id="transparency-title" className="text-2xl font-extrabold text-public-foreground">
-        Transparência
-      </h2>
-      <div className="mt-4 rounded-lg bg-public-background px-5 py-5 text-base leading-relaxed text-public-foreground shadow-sm sm:px-6">
-        <p>Esta campanha é uma ação solidária promocional vinculada a uma campanha humanitária.</p>
-        <p className="mt-4">Os recursos arrecadados aqui são destinados exclusivamente aos beneficiados.</p>
-        <p className="mt-4">
-          Ao contribuir, você declara estar ciente de que esta é uma doação voluntária para fins humanitários.
-        </p>
+    <section
+      className="relative left-1/2 mt-10 w-screen -translate-x-1/2 bg-transparency-background"
+      aria-labelledby="transparency-title"
+    >
+      <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
+        <h2 id="transparency-title" className="text-2xl font-extrabold text-public-foreground">
+          Transparência
+        </h2>
+        <div className="mt-4 rounded-lg bg-public-background px-5 py-5 text-base leading-relaxed text-public-foreground shadow-sm sm:px-6">
+          <p>Esta campanha é uma ação solidária promocional vinculada a uma campanha humanitária.</p>
+          <p className="mt-4">Os recursos arrecadados aqui são destinados exclusivamente aos beneficiados.</p>
+          <p className="mt-4">
+            Ao contribuir, você declara estar ciente de que esta é uma doação voluntária para fins humanitários.
+          </p>
+        </div>
       </div>
     </section>
   );
@@ -246,6 +306,37 @@ function getInitials(name: string) {
     .join("");
 }
 
+function CommentsSection({ comments }: { comments: PageComment[] }) {
+  return (
+    <section className="mt-10" aria-label="Comentários">
+      {comments.length > 0 ? <CommentCarousel comments={comments} /> : null}
+      <form className={comments.length > 0 ? "mt-4" : ""} onSubmit={(event) => event.preventDefault()}>
+        <label htmlFor="public-comment" className="sr-only">
+          Escreva um comentário
+        </label>
+        <div className="flex items-center gap-2 rounded-lg border border-public-border bg-public-background p-2 shadow-sm">
+          <Input
+            id="public-comment"
+            type="text"
+            placeholder="Escreva um comentário"
+            className="h-11 min-w-0 flex-1 border-0 bg-transparent text-public-foreground shadow-none focus-visible:ring-0"
+          />
+          <Button
+            type="submit"
+            variant="ghost"
+            size="icon"
+            className="size-11 shrink-0 text-donation hover:bg-donation-soft hover:text-donation"
+            aria-label="Enviar comentário"
+            aria-disabled="true"
+          >
+            <Send className="size-6" aria-hidden="true" />
+          </Button>
+        </div>
+      </form>
+    </section>
+  );
+}
+
 function CommentCarousel({ comments }: { comments: PageComment[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -259,7 +350,7 @@ function CommentCarousel({ comments }: { comments: PageComment[] }) {
   }, [comments.length]);
 
   return (
-    <section className="mt-12" aria-label="Comentários de doadores" aria-live="polite">
+    <div aria-label="Comentários de doadores" aria-live="polite">
       <div className="overflow-hidden">
         <div
           className="flex transition-transform duration-500 ease-out motion-reduce:transition-none"
@@ -317,6 +408,6 @@ function CommentCarousel({ comments }: { comments: PageComment[] }) {
           ))}
         </div>
       ) : null}
-    </section>
+    </div>
   );
 }
