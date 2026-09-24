@@ -162,32 +162,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
         <TransparencySection />
 
         {page.faqs.length > 0 ? <FaqSection faqs={page.faqs} /> : null}
-      </article>
-
-      <section
-        className="relative isolate overflow-hidden"
-        aria-label="Mensagem de união"
-      >
-        <img
-          src={unionBackground.url}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 size-full object-cover"
-        />
-        <div
-          className="absolute inset-0 -z-10 bg-donation/85 mix-blend-multiply"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute inset-0 -z-10 bg-gradient-to-b from-donation/40 via-transparent to-donation/60"
-          aria-hidden="true"
-        />
-        <div className="mx-auto flex w-full max-w-4xl items-center justify-center px-4 py-20 sm:px-6 sm:py-28">
-          <p className="max-w-xl text-center text-2xl font-bold leading-snug text-donation-foreground drop-shadow-sm sm:text-3xl">
-            Não interessa o tamanho do desafio, o que importa é a grandeza da união.
-          </p>
-        </div>
-      </section>
+      </article>      
 
       <footer className="bg-public-footer text-public-footer-foreground">
         <div className="mx-auto grid w-full max-w-4xl gap-7 px-4 py-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] sm:items-start sm:px-6 sm:py-9">
