@@ -258,11 +258,12 @@ function TransparencySection() {
           Transparência
         </h2>
         <div className="mt-4 rounded-lg bg-public-background px-5 py-5 text-base leading-relaxed text-public-foreground shadow-sm sm:px-6">
-          <p>Esta campanha é uma ação solidária promocional vinculada a uma campanha humanitária.</p>
-          <p className="mt-4">Os recursos arrecadados aqui são destinados exclusivamente aos beneficiados.</p>
+          <p>Esta campanha é uma ação solidária promocional que está diretamente vinculada a uma campanha humanitária de grande relevância social. Seu objetivo principal é mobilizar pessoas, empresas e comunidades em prol de uma causa nobre, unindo solidariedade e engajamento em prol de quem mais precisa.</p>
+          <p className="mt-4">Todos os recursos arrecadados por meio desta ação são destinados exclusivamente aos beneficiados da campanha humanitária. Não há qualquer retenção, desvio ou aplicação dos valores em custos administrativos, taxas ou despesas operacionais — cada centavo contribuído é integralmente revertido para a finalidade declarada.</p>
           <p className="mt-4">
-            Ao contribuir, você declara estar ciente de que esta é uma doação voluntária para fins humanitários.
+            Ao contribuir, você declara estar ciente e de acordo de que esta é uma doação voluntária, sem qualquer caráter de obrigatoriedade, reembolso ou contrapartida material, realizada exclusivamente para fins humanitários. Não haverá devolução dos valores doados, independentemente do valor contribuído.
           </p>
+         <p className="mt-4">Sua participação faz a diferença! Cada contribuição, por menor que seja, representa um gesto de solidariedade que impacta diretamente a vida dos beneficiados. Juntos, podemos transformar intenções em ações concretas e gerar um impacto positivo e duradouro na comunidade.</p>
         </div>
       </div>
     </section>
