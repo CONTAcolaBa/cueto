@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
-import { Check, ChevronDown, Heart, Menu, Send, X } from "lucide-react";
+import { CheckCircle2, ChevronDown, Heart, Menu, Send, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import unionBackground from "@/assets/union-background.webp.asset.json";
 
 /**
  * Fixed public microsite template.
@@ -13,74 +12,85 @@ import unionBackground from "@/assets/union-background.webp.asset.json";
  */
 export function PageTemplate({ page }: { page: PageContent }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!menuOpen) return;
-
-    function closeMenu(event: MouseEvent | KeyboardEvent) {
-      if (event instanceof KeyboardEvent) {
-        if (event.key === "Escape") setMenuOpen(false);
-        return;
-      }
-      if (!menuRef.current?.contains(event.target as Node)) setMenuOpen(false);
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setMenuOpen(false);
     }
-
-    document.addEventListener("mousedown", closeMenu);
-    document.addEventListener("keydown", closeMenu);
-    return () => {
-      document.removeEventListener("mousedown", closeMenu);
-      document.removeEventListener("keydown", closeMenu);
-    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-public-background text-public-foreground">
       <header className="border-b border-public-border bg-public-background shadow-sm">
-        <div className="relative mx-auto grid h-24 w-full max-w-4xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:h-28 sm:px-6">
+        <div className="mx-auto grid h-24 w-full max-w-4xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:h-28 sm:px-6">
           <div
             className="h-12 w-32 rounded-lg bg-public-placeholder sm:h-14 sm:w-40"
             aria-label="Espaço reservado para a futura logo"
           />
-          <div ref={menuRef} className="relative">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="shrink-0 text-public-foreground hover:bg-public-muted"
-              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
-              aria-expanded={menuOpen}
-              aria-controls="public-quick-menu"
-              onClick={() => setMenuOpen((current) => !current)}
-            >
-              {menuOpen ? <X className="size-7" /> : <Menu className="size-7" />}
-            </Button>
-
-            {menuOpen ? (
-              <nav
-                id="public-quick-menu"
-                className="absolute right-0 top-12 z-30 w-64 overflow-hidden rounded-lg border border-public-border bg-public-background py-2 shadow-xl"
-                aria-label="Links rápidos"
-              >
-                {[
-                  "INICIAL",
-                  "QUEM SOMOS",
-                  "NOSSO PROPÓSITO",
-                  "OUTRAS VAQUINHAS",
-                ].map((label) => (
-                  <span
-                    key={label}
-                    className="block px-5 py-3 text-sm font-semibold text-public-foreground"
-                    aria-disabled="true"
-                  >
-                    {label}
-                  </span>
-                ))}
-              </nav>
-            ) : null}
-          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="shrink-0 text-public-foreground hover:bg-public-muted"
+            aria-label="Abrir menu"
+            aria-expanded={menuOpen}
+            aria-controls="public-quick-menu"
+            onClick={() => setMenuOpen(true)}
+          >
+            <Menu className="size-7" />
+          </Button>
         </div>
       </header>
+
+      {menuOpen ? (
+        <div className="fixed inset-0 z-40">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/40"
+            aria-label="Fechar menu"
+            onClick={() => setMenuOpen(false)}
+          />
+          <aside
+            id="public-quick-menu"
+            className="absolute right-0 top-0 flex h-full w-72 max-w-[85vw] flex-col bg-public-background shadow-2xl"
+            role="dialog"
+            aria-label="Menu de navegação"
+          >
+            <div className="flex h-24 items-center justify-between border-b border-public-border px-4 sm:h-28 sm:px-6">
+              <span className="text-sm font-bold uppercase text-public-foreground">Menu</span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="text-public-foreground hover:bg-public-muted"
+                aria-label="Fechar menu"
+                onClick={() => setMenuOpen(false)}
+              >
+                <X className="size-7" />
+              </Button>
+            </div>
+            <nav className="flex flex-col py-2" aria-label="Links rápidos">
+              {[
+                "INICIAL",
+                "QUEM SOMOS",
+                "NOSSO PROPÓSITO",
+                "OUTRAS VAQUINHAS",
+              ].map((label) => (
+                <span
+                  key={label}
+                  className="block px-6 py-4 text-base font-semibold text-public-foreground"
+                  aria-disabled="true"
+                >
+                  {label}
+                </span>
+              ))}
+            </nav>
+          </aside>
+        </div>
+      ) : null}
 
       <article className="mx-auto w-full max-w-4xl px-4 pb-20 pt-7 sm:px-6 sm:pt-10">
         <div className="relative">
@@ -97,8 +107,8 @@ export function PageTemplate({ page }: { page: PageContent }) {
               aria-label="Imagem ainda não adicionada"
             />
           )}
-          <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-public-background px-3 py-1.5 text-sm font-semibold text-public-foreground shadow-md">
-            <Check className="size-4 text-donation" strokeWidth={3} aria-hidden="true" />
+          <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg border border-[#00C853]/20 bg-white/95 px-3 py-2 text-sm font-medium text-public-foreground shadow-md">
+            <CheckCircle2 className="size-4 text-[#00C853]" aria-hidden="true" />
             verificada
           </span>
         </div>
@@ -162,7 +172,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
         <TransparencySection />
 
         {page.faqs.length > 0 ? <FaqSection faqs={page.faqs} /> : null}
-      </article>      
+      </article>
 
       <footer className="bg-public-footer text-public-footer-foreground">
         <div className="mx-auto grid w-full max-w-4xl gap-7 px-4 py-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] sm:items-start sm:px-6 sm:py-9">
@@ -283,10 +293,21 @@ function getInitials(name: string) {
 }
 
 function CommentsSection({ comments }: { comments: PageComment[] }) {
+  const [value, setValue] = useState("");
+  const [sent, setSent] = useState(false);
+
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    if (!value.trim()) return;
+    setValue("");
+    setSent(true);
+    window.setTimeout(() => setSent(false), 2500);
+  }
+
   return (
     <section className="mt-10" aria-label="Comentários">
       {comments.length > 0 ? <CommentCarousel comments={comments} /> : null}
-      <form className={comments.length > 0 ? "mt-4" : ""} onSubmit={(event) => event.preventDefault()}>
+      <form className={comments.length > 0 ? "mt-2" : ""} onSubmit={handleSubmit}>
         <label htmlFor="public-comment" className="sr-only">
           Escreva um comentário
         </label>
@@ -294,6 +315,8 @@ function CommentsSection({ comments }: { comments: PageComment[] }) {
           <Input
             id="public-comment"
             type="text"
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
             placeholder="Escreva um comentário"
             className="h-11 min-w-0 flex-1 border-0 bg-transparent text-public-foreground shadow-none focus-visible:ring-0"
           />
@@ -303,11 +326,15 @@ function CommentsSection({ comments }: { comments: PageComment[] }) {
             size="icon"
             className="size-11 shrink-0 text-donation hover:bg-donation-soft hover:text-donation"
             aria-label="Enviar comentário"
-            aria-disabled="true"
           >
             <Send className="size-6" aria-hidden="true" />
           </Button>
         </div>
+        {sent ? (
+          <p className="mt-2 text-sm font-medium text-donation" role="status">
+            Mensagem Enviada Com Sucesso
+          </p>
+        ) : null}
       </form>
     </section>
   );
@@ -367,23 +394,6 @@ function CommentCarousel({ comments }: { comments: PageComment[] }) {
           ))}
         </div>
       </div>
-
-      {comments.length > 1 ? (
-        <div className="mt-4 flex justify-center gap-2" aria-label={`Comentário ${activeIndex + 1} de ${comments.length}`}>
-          {comments.map((item, index) => (
-            <Button
-              key={`${item.name}-${index}`}
-              type="button"
-              variant="ghost"
-              size="icon"
-              className={`size-5 rounded-full p-0 hover:bg-public-muted ${index === activeIndex ? "bg-donation" : "bg-public-placeholder"}`}
-              aria-label={`Mostrar comentário ${index + 1}`}
-              aria-current={index === activeIndex ? "true" : undefined}
-              onClick={() => setActiveIndex(index)}
-            />
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }
