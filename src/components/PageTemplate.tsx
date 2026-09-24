@@ -92,7 +92,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
         </div>
       ) : null}
 
-      <article className="mx-auto w-full max-w-4xl px-4 pb-20 pt-7 sm:px-6 sm:pt-10">
+      <article className="mx-auto w-full max-w-4xl px-4 pb-48 pt-7 sm:px-6 sm:pt-10">
         <div className="relative">
           {page.image_url ? (
             <img
@@ -113,11 +113,11 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </span>
         </div>
 
-        <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl">{page.title}</h1>
+        <h1 className="mt-4 text-2xl font-semibold leading-tight sm:text-3xl">{page.title}</h1>
 
         <section className="mt-6" aria-label="Arrecadação">
           <p className="text-base text-public-muted-foreground">Arrecadados</p>
-          <p className="mt-1 text-2xl font-extrabold sm:text-3xl">R$ 713,00 de R$ 45.000,00</p>
+          <p className="mt-1 text-xl font-semibold sm:text-2xl">R$ 713,00 de R$ 45.000,00</p>
           <div
             className="mt-3 h-2 overflow-hidden rounded-full bg-public-muted"
             role="progressbar"
@@ -134,24 +134,26 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </div>
         </section>
 
-        <div className="mt-6 grid gap-3">
-          <Button
-            type="button"
-            className="h-14 w-full rounded-[5px] bg-donation text-lg font-bold text-donation-foreground hover:bg-donation"
-            aria-disabled="true"
-            tabIndex={-1}
-          >
-            Fazer uma Doação
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-14 w-full rounded-[5px] border-2 border-donation bg-public-background text-lg font-bold text-donation hover:bg-public-background"
-            aria-disabled="true"
-            tabIndex={-1}
-          >
-            Compartilhar
-          </Button>
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-public-border bg-public-background/95 p-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur sm:p-4">
+          <div className="mx-auto grid w-full max-w-4xl gap-2 sm:grid-cols-2 sm:gap-3 sm:px-2">
+            <Button
+              type="button"
+              className="h-12 w-full rounded-lg bg-donation text-base font-semibold text-donation-foreground hover:bg-donation"
+              aria-disabled="true"
+              tabIndex={-1}
+            >
+              Fazer uma Doação
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12 w-full rounded-lg border border-donation bg-public-background text-base font-semibold text-donation hover:bg-public-background"
+              aria-disabled="true"
+              tabIndex={-1}
+            >
+              Compartilhar
+            </Button>
+          </div>
         </div>
 
         {page.subtitle ? (
@@ -258,12 +260,12 @@ function TransparencySection() {
 function FaqSection({ faqs }: { faqs: PageFaq[] }) {
   return (
     <section className="mt-12" aria-label="Perguntas Frequentes">
-      <h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">Perguntas Frequentes</h2>
+      <h2 className="text-2xl font-semibold leading-tight sm:text-3xl">Perguntas Frequentes</h2>
       <dl className="mt-6 grid gap-4">
         {faqs.map((faq, index) => (
           <details
             key={`${faq.question}-${index}`}
-            className="group rounded-lg border border-public-border bg-public-background shadow-sm"
+            className="group rounded-3xl border border-public-border bg-public-background shadow-sm"
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5 text-left [&::-webkit-details-marker]:hidden sm:px-7">
               <span className="text-lg font-bold leading-snug text-public-foreground">{faq.question}</span>
@@ -347,7 +349,7 @@ function CommentCarousel({ comments }: { comments: PageComment[] }) {
     if (comments.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const interval = window.setInterval(
       () => setActiveIndex((current) => (current + 1) % comments.length),
-      3000,
+      5000,
     );
     return () => window.clearInterval(interval);
   }, [comments.length]);
