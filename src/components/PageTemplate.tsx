@@ -26,9 +26,10 @@ export function PageTemplate({ page }: { page: PageContent }) {
     <main className="min-h-screen overflow-x-hidden bg-public-background text-public-foreground">
       <header className="border-b border-public-border bg-public-background shadow-sm">
         <div className="mx-auto grid h-24 w-full max-w-4xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:h-28 sm:px-6">
-          <div
-            className="h-12 w-32 rounded-lg bg-public-placeholder sm:h-14 sm:w-40"
-            aria-label="Espaço reservado para a futura logo"
+          <img
+            src="/logo-acao-solidaria.webp"
+            alt="Ação Solidária"
+            className="h-12 w-32 object-contain object-left sm:h-14 sm:w-40"
           />
           <Button
             type="button"
@@ -152,8 +153,8 @@ export function PageTemplate({ page }: { page: PageContent }) {
               aria-disabled="true"
               tabIndex={-1}
             >
-              <ShareIcon />
               <span>Compartilhar</span>
+              <ShareIcon />
             </Button>
           </div>
         </div>
@@ -182,10 +183,14 @@ export function PageTemplate({ page }: { page: PageContent }) {
         <div className="mx-auto grid w-full max-w-4xl gap-7 px-4 py-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] sm:items-start sm:px-6 sm:py-9">
           <div>
             <div
-              className="flex h-14 w-36 items-center justify-center rounded-lg border border-public-footer-foreground/40 bg-public-footer-foreground/15"
-              aria-label="Espaço reservado para a futura logo"
+              className="flex h-14 w-36 items-center justify-center overflow-hidden rounded-lg border border-public-footer-foreground/40 bg-public-footer-foreground/15"
+              aria-label="Logo Ação Solidária"
             >
-              <span className="text-xs font-semibold uppercase text-public-footer-foreground">Logo</span>
+              <img
+                src="/logo-acao-solidaria-footer.webp"
+                alt="Ação Solidária"
+                className="h-full w-full object-contain"
+              />
             </div>
             <p className="mt-2 max-w-xs text-sm font-medium leading-snug text-public-footer-foreground">
               Juntos, transformamos solidariedade em esperança.
@@ -221,6 +226,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </p>
         </div>
       </footer>
+      <div className="h-48 bg-public-background" aria-hidden="true" />
     </main>
   );
 }
@@ -243,7 +249,7 @@ function TransparencySection() {
       aria-labelledby="transparency-title"
     >
       <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
-        <h2 id="transparency-title" className="flex items-center gap-2 text-2xl font-extrabold text-public-foreground">
+        <h2 id="transparency-title" className="flex items-center gap-2 text-2xl font-extrabold text-[#00C853]">
           <ShieldIcon />
           <span>Transparência</span>
         </h2>
@@ -271,7 +277,7 @@ function FaqSection({ faqs }: { faqs: PageFaq[] }) {
             className="group rounded-3xl border border-public-border bg-public-background shadow-sm"
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5 text-left [&::-webkit-details-marker]:hidden sm:px-7">
-              <span className="text-lg font-bold leading-snug text-public-foreground">{faq.question}</span>
+              <span className="text-lg font-normal leading-snug text-public-foreground">{faq.question}</span>
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-public-muted text-public-foreground">
                 <ChevronDown className="size-5 transition-transform group-open:rotate-180" aria-hidden="true" />
               </span>
