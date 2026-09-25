@@ -183,10 +183,14 @@ export function PageTemplate({ page }: { page: PageContent }) {
         <div className="mx-auto grid w-full max-w-4xl gap-7 px-4 py-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] sm:items-start sm:px-6 sm:py-9">
           <div>
             <div
-              className="flex h-14 w-36 items-center justify-center rounded-lg border border-public-footer-foreground/40 bg-public-footer-foreground/15"
-              aria-label="Espaço reservado para a futura logo"
+              className="flex h-14 w-36 items-center justify-center overflow-hidden rounded-lg border border-public-footer-foreground/40 bg-public-footer-foreground/15"
+              aria-label="Logo Ação Solidária"
             >
-              <span className="text-xs font-semibold uppercase text-public-footer-foreground">Logo</span>
+              <img
+                src="/logo-acao-solidaria-footer.webp"
+                alt="Ação Solidária"
+                className="h-full w-full object-contain"
+              />
             </div>
             <p className="mt-2 max-w-xs text-sm font-medium leading-snug text-public-footer-foreground">
               Juntos, transformamos solidariedade em esperança.
