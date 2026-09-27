@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
 import { CheckCircle2, ChevronDown, Menu, Send, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,12 +75,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
               </Button>
             </div>
             <nav className="flex flex-col py-2" aria-label="Links rápidos">
-              {[
-                "INICIAL",
-                "QUEM SOMOS",
-                "NOSSO PROPÓSITO",
-                "OUTRAS VAQUINHAS",
-              ].map((label) => (
+              {["INICIAL", "QUEM SOMOS", "NOSSO PROPÓSITO", "OUTRAS VAQUINHAS"].map((label) => (
                 <span
                   key={label}
                   className="block px-6 py-4 text-base font-semibold text-public-foreground"
@@ -131,20 +127,22 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </div>
           <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 text-base text-public-muted-foreground">
             <span>19 doações</span>
-            <span className="rounded-full bg-donation-soft px-2 py-0.5 text-xs font-semibold text-donation">1,58%</span>
+            <span className="rounded-full bg-donation-soft px-2 py-0.5 text-xs font-semibold text-donation">
+              1,58%
+            </span>
           </div>
         </section>
 
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-public-border bg-public-background/95 p-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur sm:p-4">
           <div className="mx-auto grid w-full max-w-4xl gap-2 sm:grid-cols-2 sm:gap-3 sm:px-2">
             <Button
-              type="button"
+              asChild
               className="h-12 w-full rounded-lg bg-donation text-[17px] font-semibold text-donation-foreground hover:bg-donation"
-              aria-disabled="true"
-              tabIndex={-1}
             >
-              <span>Fazer uma Doação</span>
-              <HandHoldingHeartIcon />
+              <Link to="/doacao">
+                <span>Fazer uma Doação</span>
+                <HandHoldingHeartIcon />
+              </Link>
             </Button>
             <Button
               type="button"
@@ -194,7 +192,9 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
           <nav className="grid grid-cols-2 gap-6" aria-label="Links do rodapé">
             <div>
-              <h2 className="text-sm font-extrabold uppercase text-public-footer-foreground">Quem somos</h2>
+              <h2 className="text-sm font-extrabold uppercase text-public-footer-foreground">
+                Quem somos
+              </h2>
               <div className="mt-3 grid gap-1.5 text-sm">
                 <FooterLink label="Início" />
                 <FooterLink label="Vaquinhas" />
@@ -204,7 +204,9 @@ export function PageTemplate({ page }: { page: PageContent }) {
               </div>
             </div>
             <div>
-              <h2 className="text-sm font-extrabold uppercase text-public-footer-foreground">Contatos</h2>
+              <h2 className="text-sm font-extrabold uppercase text-public-footer-foreground">
+                Contatos
+              </h2>
               <div className="mt-3 grid gap-1.5 text-sm">
                 <FooterLink label="Telefone" />
                 <FooterLink label="Whatsapp" />
@@ -217,7 +219,9 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
         <div className="bg-public-footer-bottom">
           <p className="mx-auto w-full max-w-4xl whitespace-pre-line px-4 py-4 text-center text-xs leading-relaxed text-public-footer-foreground sm:px-6">
-            {"n© Copyright. Todos os direitos reservados./organização sem fins lucrativos"}
+            {
+              "Instrução não governamental reservada/ BR\n© Copyright. Todos os direitos reservados."
+            }
           </p>
         </div>
       </footer>
@@ -229,18 +233,23 @@ export function PageTemplate({ page }: { page: PageContent }) {
 function SunHeartIcon() {
   return (
     <svg viewBox="0 0 24 24" className="mt-0.5 size-7 shrink-0" fill="none" aria-hidden="true">
-      <path fillRule="evenodd" clipRule="evenodd" d="M12 1.25C12.4142 1.25 12.75 1.58579 12.75 2V4C12.75 4.41421 12.4142 4.75 12 4.75C11.5858 4.75 11.25 4.41421 11.25 4V2C11.25 1.58579 11.5858 1.25 12 1.25ZM5.46967 5.46967C5.76256 5.17678 6.23744 5.17678 6.53033 5.46967L6.87359 5.81293C7.16648 6.10582 7.16648 6.5807 6.87359 6.87359C6.5807 7.16648 6.10582 7.16648 5.81293 6.87359L5.46967 6.53033C5.17678 6.23744 5.17678 5.76256 5.46967 5.46967ZM18.5303 5.46967C18.8232 5.76256 18.8232 6.23744 18.5303 6.53033L18.1871 6.87359C17.8942 7.16648 17.4193 7.16648 17.1264 6.87359C16.8335 6.5807 16.8335 6.10582 17.1264 5.81293L17.4697 5.46967C17.7626 5.17678 18.2374 5.17678 18.5303 5.46967ZM1.25 12C1.25 11.5858 1.58579 11.25 2 11.25H4C4.41421 11.25 4.75 11.5858 4.75 12C4.75 12.4142 4.41421 12.75 4 12.75H2C1.58579 12.75 1.25 12.4142 1.25 12ZM19.25 12C19.25 11.5858 19.5858 11.25 20 11.25H22C22.4142 11.25 22.75 11.5858 22.75 12C22.75 12.4142 22.4142 12.75 22 12.75H20C19.5858 12.75 19.25 12.4142 19.25 12ZM6.87338 17.1266C7.16627 17.4195 7.16627 17.8944 6.87338 18.1873L6.53033 18.5303C6.23744 18.8232 5.76256 18.8232 5.46967 18.5303C5.17678 18.2374 5.17678 17.7626 5.46967 17.4697L5.81272 17.1266C6.10561 16.8337 6.58048 16.8337 6.87338 17.1266ZM17.1266 17.1266C17.4195 16.8337 17.8944 16.8337 18.1873 17.1266L18.5303 17.4697C18.8232 17.7626 18.8232 18.2374 18.5303 18.5303C18.2374 18.8232 17.7626 18.8232 17.4697 18.5303L17.1266 18.1873C16.8337 17.8944 16.8337 17.4195 17.1266 17.1266ZM12 19.25C12.4142 19.25 12.75 19.5858 12.75 20V22C12.75 22.4142 12.4142 22.75 12 22.75C11.5858 22.75 11.25 22.4142 11.25 22V20C11.25 19.5858 11.5858 19.25 12 19.25Z" fill="#00C853" />
-      <path d="M7 11.0595C7 13.6018 9.00971 14.9566 10.4809 16.1692C11 16.5971 11.5 17 12 17C12.5 17 13 16.5971 13.5191 16.1692C14.9903 14.9566 17 13.6018 17 11.0595C17 8.51718 14.2499 6.71421 12 9.15837C9.75008 6.71421 7 8.51718 7 11.0595Z" fill="#00C853" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 1.25C12.4142 1.25 12.75 1.58579 12.75 2V4C12.75 4.41421 12.4142 4.75 12 4.75C11.5858 4.75 11.25 4.41421 11.25 4V2C11.25 1.58579 11.5858 1.25 12 1.25ZM5.46967 5.46967C5.76256 5.17678 6.23744 5.17678 6.53033 5.46967L6.87359 5.81293C7.16648 6.10582 7.16648 6.5807 6.87359 6.87359C6.5807 7.16648 6.10582 7.16648 5.81293 6.87359L5.46967 6.53033C5.17678 6.23744 5.17678 5.76256 5.46967 5.46967ZM18.5303 5.46967C18.8232 5.76256 18.8232 6.23744 18.5303 6.53033L18.1871 6.87359C17.8942 7.16648 17.4193 7.16648 17.1264 6.87359C16.8335 6.5807 16.8335 6.10582 17.1264 5.81293L17.4697 5.46967C17.7626 5.17678 18.2374 5.17678 18.5303 5.46967ZM1.25 12C1.25 11.5858 1.58579 11.25 2 11.25H4C4.41421 11.25 4.75 11.5858 4.75 12C4.75 12.4142 4.41421 12.75 4 12.75H2C1.58579 12.75 1.25 12.4142 1.25 12ZM19.25 12C19.25 11.5858 19.5858 11.25 20 11.25H22C22.4142 11.25 22.75 11.5858 22.75 12C22.75 12.4142 22.4142 12.75 22 12.75H20C19.5858 12.75 19.25 12.4142 19.25 12ZM6.87338 17.1266C7.16627 17.4195 7.16627 17.8944 6.87338 18.1873L6.53033 18.5303C6.23744 18.8232 5.76256 18.8232 5.46967 18.5303C5.17678 18.2374 5.17678 17.7626 5.46967 17.4697L5.81272 17.1266C6.10561 16.8337 6.58048 16.8337 6.87338 17.1266ZM17.1266 17.1266C17.4195 16.8337 17.8944 16.8337 18.1873 17.1266L18.5303 17.4697C18.8232 17.7626 18.8232 18.2374 18.5303 18.5303C18.2374 18.8232 17.7626 18.8232 17.4697 18.5303L17.1266 18.1873C16.8337 17.8944 16.8337 17.4195 17.1266 17.1266ZM12 19.25C12.4142 19.25 12.75 19.5858 12.75 20V22C12.75 22.4142 12.4142 22.75 12 22.75C11.5858 22.75 11.25 22.4142 11.25 22V20C11.25 19.5858 11.5858 19.25 12 19.25Z"
+        fill="#00C853"
+      />
+      <path
+        d="M7 11.0595C7 13.6018 9.00971 14.9566 10.4809 16.1692C11 16.5971 11.5 17 12 17C12.5 17 13 16.5971 13.5191 16.1692C14.9903 14.9566 17 13.6018 17 11.0595C17 8.51718 14.2499 6.71421 12 9.15837C9.75008 6.71421 7 8.51718 7 11.0595Z"
+        fill="#00C853"
+      />
     </svg>
   );
 }
 
 function FooterLink({ label }: { label: string }) {
   return (
-    <span
-      className="w-fit text-public-footer-foreground/90"
-      aria-disabled="true"
-    >
+    <span className="w-fit text-public-footer-foreground/90" aria-disabled="true">
       {label}
     </span>
   );
@@ -253,15 +262,30 @@ function TransparencySection() {
       aria-labelledby="transparency-title"
     >
       <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
-        <h2 id="transparency-title" className="flex items-center gap-2 text-2xl font-extrabold text-[#00C853]">
+        <h2
+          id="transparency-title"
+          className="flex items-center gap-2 text-2xl font-extrabold text-[#00C853]"
+        >
           <ShieldIcon />
           <span>Transparência</span>
         </h2>
         <div className="mt-4 rounded-lg bg-public-background px-5 py-5 text-base leading-relaxed text-public-foreground shadow-sm sm:px-6">
-          <p>Esta campanha é uma iniciativa humanitária voltada para a mobilização da sociedade, empresas e comunidades. Seu propósito é unir esforços e promover a solidariedade para apoiar diretamente pessoas que se encontram em situação de vulnerabilidade.</p>
-          <p className="mt-4">Todos os recursos arrecadados são destinados de forma integral aos beneficiários da causa. A ação garante total transparência, assegurando que não há qualquer retenção de valores para cobrir custos, taxas ou despesas operacionais.</p>
-          <p className="mt-4">A participação ocorre de forma totalmente voluntária, sem expectativas de reembolso ou contrapartida material. Cada contribuição, independentemente do valor, é essencial para transformar a solidariedade em um impacto positivo e duradouro na comunidade.</p>
-         <p className="mt-4">Atenciosamente, Ação Solidária. </p>
+          <p>
+            Esta campanha é uma iniciativa humanitária voltada para a mobilização da sociedade,
+            empresas e comunidades. Seu propósito é unir esforços e promover a solidariedade para
+            apoiar diretamente pessoas que se encontram em situação de vulnerabilidade.
+          </p>
+          <p className="mt-4">
+            Todos os recursos arrecadados são destinados de forma integral aos beneficiários da
+            causa. A ação garante total transparência, assegurando que não há qualquer retenção de
+            valores para cobrir custos, taxas ou despesas operacionais.
+          </p>
+          <p className="mt-4">
+            A participação ocorre de forma totalmente voluntária, sem expectativas de reembolso ou
+            contrapartida material. Cada contribuição, independentemente do valor, é essencial para
+            transformar a solidariedade em um impacto positivo e duradouro na comunidade.
+          </p>
+          <p className="mt-4">Atenciosamente, Ação Solidária. </p>
         </div>
       </div>
     </section>
@@ -279,14 +303,19 @@ function FaqSection({ faqs }: { faqs: PageFaq[] }) {
             className="group rounded-3xl border border-public-border bg-public-background shadow-sm"
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5 text-left [&::-webkit-details-marker]:hidden sm:px-7">
-              <span className="text-lg font-normal leading-snug text-public-foreground">{faq.question}</span>
+              <span className="text-lg font-normal leading-snug text-public-foreground">
+                {faq.question}
+              </span>
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-public-muted text-public-foreground">
-                <ChevronDown className="size-5 transition-transform group-open:rotate-180" aria-hidden="true" />
+                <ChevronDown
+                  className="size-5 transition-transform group-open:rotate-180"
+                  aria-hidden="true"
+                />
               </span>
             </summary>
             <div className="border-t border-public-border px-5 py-4 sm:px-7">
               <p className="whitespace-pre-line text-base leading-relaxed text-public-muted-foreground">
-              {faq.answer}
+                {faq.answer}
               </p>
             </div>
           </details>
@@ -307,7 +336,10 @@ function HandHoldingHeartIcon() {
 function ShareIcon() {
   return (
     <svg viewBox="0 0 16 16" className="size-4 shrink-0" fill="none" aria-hidden="true">
-      <path d="M11 6C12.6569 6 14 4.65685 14 3C14 1.34315 12.6569 0 11 0C9.34315 0 8 1.34315 8 3C8 3.22371 8.02449 3.44169 8.07092 3.65143L4.86861 5.65287C4.35599 5.24423 3.70652 5 3 5C1.34315 5 0 6.34315 0 8C0 9.65685 1.34315 11 3 11C3.70652 11 4.35599 10.7558 4.86861 10.3471L8.07092 12.3486C8.02449 12.5583 8 12.7763 8 13C8 14.6569 9.34315 16 11 16C12.6569 16 14 14.6569 14 13C14 11.3431 12.6569 10 11 10C10.2935 10 9.644 10.2442 9.13139 10.6529L5.92908 8.65143C5.97551 8.44169 6 8.22371 6 8C6 7.77629 5.97551 7.55831 5.92908 7.34857L9.13139 5.34713C9.644 5.75577 10.2935 6 11 6Z" fill="#00C853" />
+      <path
+        d="M11 6C12.6569 6 14 4.65685 14 3C14 1.34315 12.6569 0 11 0C9.34315 0 8 1.34315 8 3C8 3.22371 8.02449 3.44169 8.07092 3.65143L4.86861 5.65287C4.35599 5.24423 3.70652 5 3 5C1.34315 5 0 6.34315 0 8C0 9.65685 1.34315 11 3 11C3.70652 11 4.35599 10.7558 4.86861 10.3471L8.07092 12.3486C8.02449 12.5583 8 12.7763 8 13C8 14.6569 9.34315 16 11 16C12.6569 16 14 14.6569 14 13C14 11.3431 12.6569 10 11 10C10.2935 10 9.644 10.2442 9.13139 10.6529L5.92908 8.65143C5.97551 8.44169 6 8.22371 6 8C6 7.77629 5.97551 7.55831 5.92908 7.34857L9.13139 5.34713C9.644 5.75577 10.2935 6 11 6Z"
+        fill="#00C853"
+      />
     </svg>
   );
 }
@@ -317,6 +349,140 @@ function ShieldIcon() {
     <svg viewBox="0 0 30 30" className="size-6 shrink-0" fill="#00C853" aria-hidden="true">
       <path d="M24.1 4.9C21 4.7 18 4 15 3c-2.9 1-5.9 1.7-9.1 1.9C5.4 5 5 5.4 5 5.9V17c0 3 1.7 5.8 4.4 7.2l5.1 2.6c.1.1.3.1.4.1.2 0 .3-.1.4-.1l5.1-2.6c2.7-1.4 4.4-4.1 4.4-7.2V5.9c0-.5-.4-.9-.9-1ZM19.7 22.4 15 24.8V15H7V6.9c2.7-.3 5.4-.9 8-1.7V15h8v2.1c0 2.2-1.3 4.3-3.3 5.3Z" />
     </svg>
+  );
+}
+
+export function DonationPage() {
+  const [amount, setAmount] = useState(0);
+  const [anonymous, setAnonymous] = useState(false);
+  const suggestedAmounts = [25, 30, 50, 100, 200, 300];
+  const formattedAmount = amount.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+  return (
+    <main className="min-h-screen bg-public-background text-public-foreground">
+      <header className="border-b border-public-border bg-public-background shadow-sm">
+        <div className="mx-auto flex h-24 w-full max-w-4xl items-center justify-between px-4 sm:h-28 sm:px-6">
+          <Link to="/" aria-label="Voltar para a página inicial">
+            <img
+              src="/logo-acao-solidaria.webp"
+              alt="Ação Solidária"
+              className="h-12 w-32 object-contain object-left sm:h-14 sm:w-40"
+            />
+          </Link>
+          <Link
+            to="/"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-public-muted-foreground hover:bg-public-muted"
+          >
+            Voltar
+          </Link>
+        </div>
+      </header>
+
+      <section className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-4xl flex-col px-4 pb-10 pt-12 sm:px-6 sm:pt-20">
+        <div>
+          <h1 className="text-3xl font-semibold leading-tight sm:text-4xl">
+            Qual valor você gostaria de doar?
+          </h1>
+          <label htmlFor="donation-amount" className="sr-only">
+            Valor da doação
+          </label>
+          <div className="mt-5 flex items-center rounded-2xl border-2 border-donation bg-public-background px-5 focus-within:ring-2 focus-within:ring-donation/30">
+            <span className="text-2xl text-public-muted-foreground">R$</span>
+            <input
+              id="donation-amount"
+              type="number"
+              min="0"
+              step="0.01"
+              value={amount || ""}
+              onChange={(event) => setAmount(Math.max(0, Number(event.target.value) || 0))}
+              placeholder="0,00"
+              className="h-24 min-w-0 flex-1 bg-transparent px-3 text-3xl text-public-foreground outline-none placeholder:text-public-muted-foreground"
+            />
+          </div>
+          <label className="mt-5 flex w-fit cursor-pointer items-center gap-3 text-lg">
+            <input
+              type="checkbox"
+              checked={anonymous}
+              onChange={(event) => setAnonymous(event.target.checked)}
+              className="size-5 accent-donation"
+            />
+            Doação anônima
+          </label>
+
+          <h2 className="mt-12 text-2xl font-semibold sm:text-3xl">Valores sugeridos</h2>
+          <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {suggestedAmounts.map((suggestedAmount) => (
+              <button
+                key={suggestedAmount}
+                type="button"
+                onClick={() => setAmount(suggestedAmount)}
+                className="rounded-2xl border-2 border-donation px-3 py-5 text-xl text-public-foreground transition-colors hover:bg-donation-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-donation"
+              >
+                {suggestedAmount.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-auto pt-16">
+          <div className="flex items-center justify-between text-xl font-semibold text-donation">
+            <span>Total:</span>
+            <span>{formattedAmount}</span>
+          </div>
+          <button
+            type="button"
+            className="mt-4 h-16 w-full rounded-2xl bg-donation text-2xl font-semibold text-donation-foreground shadow-sm"
+            aria-label="Contribuir (em breve)"
+          >
+            Contribuir
+          </button>
+        </div>
+      </section>
+
+      <footer className="bg-public-footer text-public-footer-foreground">
+        <div className="mx-auto grid w-full max-w-4xl gap-7 px-4 py-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] sm:items-start sm:px-6 sm:py-9">
+          <div>
+            <img
+              src="/logo-acao-solidaria-footer.webp"
+              alt="Ação Solidária"
+              className="h-20 w-48 object-contain object-left"
+            />
+            <p className="mt-2 max-w-xs text-sm font-medium leading-snug text-public-footer-foreground">
+              Juntos, transformamos solidariedade em esperança.
+            </p>
+          </div>
+          <nav className="grid grid-cols-2 gap-6" aria-label="Links do rodapé">
+            <div>
+              <h2 className="text-sm font-extrabold uppercase">Quem somos</h2>
+              <div className="mt-3 grid gap-1.5 text-sm">
+                <span>Início</span>
+                <span>Vaquinhas</span>
+                <span>Eventos</span>
+                <span>Privacidade</span>
+                <span>Políticas</span>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-sm font-extrabold uppercase">Contatos</h2>
+              <div className="mt-3 grid gap-1.5 text-sm">
+                <span>Telefone</span>
+                <span>Whatsapp</span>
+                <span>Email</span>
+                <span>SAC</span>
+              </div>
+            </div>
+          </nav>
+        </div>
+        <div className="bg-public-footer-bottom">
+          <p className="mx-auto w-full max-w-4xl whitespace-pre-line px-4 py-4 text-center text-xs leading-relaxed">
+            {
+              "Instrução não governamental reservada/ BR\\n© Copyright. Todos os direitos reservados."
+            }
+          </p>
+        </div>
+      </footer>
+      <div className="h-24 bg-public-background" aria-hidden="true" />
+    </main>
   );
 }
 
@@ -381,7 +547,8 @@ function CommentCarousel({ comments }: { comments: PageComment[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    if (comments.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (comments.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+      return;
     const interval = window.setInterval(
       () => setActiveIndex((current) => (current + 1) % comments.length),
       5000,
@@ -421,7 +588,9 @@ function CommentCarousel({ comments }: { comments: PageComment[] }) {
                       ✓ Doador(a)
                     </span>
                   </div>
-                  {comment.time ? <p className="mt-0.5 text-xs text-public-muted-foreground">{comment.time}</p> : null}
+                  {comment.time ? (
+                    <p className="mt-0.5 text-xs text-public-muted-foreground">{comment.time}</p>
+                  ) : null}
                   <p className="mt-2 whitespace-pre-line text-sm leading-snug text-public-foreground">
                     {comment.text}
                   </p>
