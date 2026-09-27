@@ -217,7 +217,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
         <div className="bg-public-footer-bottom">
           <p className="mx-auto w-full max-w-4xl whitespace-pre-line px-4 py-4 text-center text-xs leading-relaxed text-public-footer-foreground sm:px-6">
-            {"Instrução não governamental reservada/ BR\n© Copyright. Todos os direitos reservados."}
+            {"BR\n© Copyright. Todos os direitos reservados."}
           </p>
         </div>
       </footer>
