@@ -254,7 +254,7 @@ function TransparencySection() {
           <span>Transparência</span>
         </h2>
         <div className="mt-4 rounded-lg bg-public-background px-5 py-5 text-base leading-relaxed text-public-foreground shadow-sm sm:px-6">
-          <p>Esta campanha é uma ação solidária promocional que está diretamente vinculada a uma campanha humanitária de grande relevância social. Seu objetivo principal é mobilizar pessoas, empresas e comunidades em prol de uma causa nobre, unindo solidariedade e engajamento em prol de quem mais precisa.</p>
+          <p>Esta campanha é uma iniciativa humanitária voltada para a mobilização da sociedade, empresas e comunidades. Seu propósito é unir esforços e promover a solidariedade para apoiar diretamente pessoas que se encontram em situação de vulnerabilidade.</p>
           <p className="mt-4">Todos os recursos arrecadados por meio desta ação são destinados exclusivamente aos beneficiados da campanha humanitária. Não há qualquer retenção, desvio ou aplicação dos valores em custos administrativos, taxas ou despesas operacionais — cada centavo contribuído é integralmente revertido para a finalidade declarada.</p>
           <p className="mt-4">
             Ao contribuir, você declara estar ciente e de acordo de que esta é uma doação voluntária, sem qualquer caráter de obrigatoriedade, reembolso ou contrapartida material, realizada exclusivamente para fins humanitários. Não haverá devolução dos valores doados, independentemente do valor contribuído.
