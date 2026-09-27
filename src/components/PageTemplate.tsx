@@ -255,11 +255,9 @@ function TransparencySection() {
         </h2>
         <div className="mt-4 rounded-lg bg-public-background px-5 py-5 text-base leading-relaxed text-public-foreground shadow-sm sm:px-6">
           <p>Esta campanha é uma iniciativa humanitária voltada para a mobilização da sociedade, empresas e comunidades. Seu propósito é unir esforços e promover a solidariedade para apoiar diretamente pessoas que se encontram em situação de vulnerabilidade.</p>
-          <p className="mt-4">Todos os recursos arrecadados por meio desta ação são destinados exclusivamente aos beneficiados da campanha humanitária. Não há qualquer retenção, desvio ou aplicação dos valores em custos administrativos, taxas ou despesas operacionais — cada centavo contribuído é integralmente revertido para a finalidade declarada.</p>
-          <p className="mt-4">
-            Ao contribuir, você declara estar ciente e de acordo de que esta é uma doação voluntária, sem qualquer caráter de obrigatoriedade, reembolso ou contrapartida material, realizada exclusivamente para fins humanitários. Não haverá devolução dos valores doados, independentemente do valor contribuído.
-          </p>
-         <p className="mt-4">Sua participação faz a diferença! Cada contribuição, por menor que seja, representa um gesto de solidariedade que impacta diretamente a vida dos beneficiados. Juntos, podemos transformar intenções em ações concretas e gerar um impacto positivo e duradouro na comunidade.</p>
+          <p className="mt-4">Todos os recursos arrecadados são destinados de forma integral aos beneficiários da causa. A ação garante total transparência, assegurando que não há qualquer retenção de valores para cobrir custos, taxas ou despesas operacionais.</p>
+          <p className="mt-4">A participação ocorre de forma totalmente voluntária, sem expectativas de reembolso ou contrapartida material. Cada contribuição, independentemente do valor, é essencial para transformar a solidariedade em um impacto positivo e duradouro na comunidade.</p>
+         <p className="mt-4">Atenciosamente, Ação Solidária. </p>
         </div>
       </div>
     </section>
