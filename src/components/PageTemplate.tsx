@@ -1,10 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
 import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
-import { CheckCircle2, ChevronDown, Menu, Send, X } from "lucide-react";
+import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 /**
  * Fixed public microsite template.
@@ -170,6 +171,8 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </p>
         ) : null}
 
+        <PixDonationSection />
+
         <CommentsSection comments={page.comments} />
 
         <TransparencySection />
@@ -252,6 +255,55 @@ function FooterLink({ label }: { label: string }) {
     <span className="w-fit text-public-footer-foreground/90" aria-disabled="true">
       {label}
     </span>
+  );
+}
+
+function PixDonationSection() {
+  const pixKey = "vaquinhasolidaria@gmail.com";
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(pixKey);
+      setCopied(true);
+      toast.success("Chave Pix copiada!");
+      window.setTimeout(() => setCopied(false), 2200);
+    } catch {
+      toast.error("Não foi possível copiar a chave Pix.");
+    }
+  }
+
+  return (
+    <section
+      className="mt-10 flex flex-col items-center rounded-[28px] bg-[#d7ffd7] px-5 py-8 text-center sm:px-8 sm:py-10"
+      aria-labelledby="pix-donation-title"
+    >
+      <h2
+        id="pix-donation-title"
+        className="text-xl font-semibold tracking-tight text-[#1f5f2a] sm:text-2xl"
+      >
+        Prefere doar direto via Pix?
+      </h2>
+      <p className="mt-2 text-sm text-[#55705a] sm:text-base">
+        Clique abaixo para copiar a chave
+      </p>
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="mt-7 flex w-full max-w-sm items-center gap-3 rounded-[24px] bg-[#2e7d32] px-5 py-4 text-left text-white shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#246428] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2e7d32] focus-visible:ring-offset-2 active:scale-[0.99]"
+        aria-label="Copiar chave Pix vaquinhasolidaria@gmail.com"
+      >
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/15">
+          {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+        </span>
+        <span className="min-w-0">
+          <span className="block text-base font-bold sm:text-lg">Copiar chave Pix</span>
+          <span className="block truncate font-mono text-xs text-white/85 sm:text-sm">
+            {pixKey}
+          </span>
+        </span>
+      </button>
+    </section>
   );
 }
 
