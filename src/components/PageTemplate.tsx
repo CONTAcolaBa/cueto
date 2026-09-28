@@ -378,15 +378,15 @@ export function DonationPage() {
         </div>
       </header>
 
-      <section className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-4xl flex-col px-4 pb-10 pt-12 sm:px-6 sm:pt-20">
+      <section className="mx-auto w-full max-w-4xl px-4 pb-10 pt-12 sm:px-6 sm:pt-20">
         <div>
-          <h1 className="text-3xl font-semibold leading-tight sm:text-4xl">
+          <h1 className="font-[Nunito,ui-rounded,'Arial Rounded MT Bold',sans-serif] text-2xl font-semibold leading-tight sm:text-3xl">
             Qual valor você gostaria de doar?
           </h1>
           <label htmlFor="donation-amount" className="sr-only">
             Valor da doação
           </label>
-          <div className="mt-5 flex items-center rounded-2xl border-2 border-donation bg-public-background px-5 focus-within:ring-2 focus-within:ring-donation/30">
+          <div className="mt-5 flex h-16 items-center rounded-2xl border-2 border-donation bg-public-background px-5 focus-within:ring-2 focus-within:ring-donation/30">
             <span className="text-2xl text-public-muted-foreground">R$</span>
             <input
               id="donation-amount"
@@ -396,27 +396,30 @@ export function DonationPage() {
               value={amount || ""}
               onChange={(event) => setAmount(Math.max(0, Number(event.target.value) || 0))}
               placeholder="0,00"
-              className="h-24 min-w-0 flex-1 bg-transparent px-3 text-3xl text-public-foreground outline-none placeholder:text-public-muted-foreground"
+              className="min-w-0 flex-1 bg-transparent px-3 text-2xl text-public-foreground outline-none placeholder:text-public-muted-foreground"
             />
           </div>
           <label className="mt-5 flex w-fit cursor-pointer items-center gap-3 text-lg">
-            <input
-              type="checkbox"
-              checked={anonymous}
-              onChange={(event) => setAnonymous(event.target.checked)}
-              className="size-5 accent-donation"
-            />
+            <span className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-donation-soft transition-colors has-[:checked]:bg-donation">
+              <input
+                type="checkbox"
+                checked={anonymous}
+                onChange={(event) => setAnonymous(event.target.checked)}
+                className="peer sr-only"
+              />
+              <span className="pointer-events-none absolute left-1 size-4 rounded-full bg-donation transition-transform peer-checked:translate-x-5 peer-checked:bg-white" />
+            </span>
             Doação anônima
           </label>
 
-          <h2 className="mt-12 text-2xl font-semibold sm:text-3xl">Valores sugeridos</h2>
-          <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <h2 className="mt-9 font-[Nunito,ui-rounded,'Arial Rounded MT Bold',sans-serif] text-2xl font-semibold sm:text-3xl">Valores sugeridos</h2>
+          <div className="mt-4 grid grid-cols-3 gap-3 sm:gap-4">
             {suggestedAmounts.map((suggestedAmount) => (
               <button
                 key={suggestedAmount}
                 type="button"
                 onClick={() => setAmount(suggestedAmount)}
-                className="rounded-2xl border-2 border-donation px-3 py-5 text-xl text-public-foreground transition-colors hover:bg-donation-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-donation"
+                className="rounded-2xl border-2 border-donation px-2 py-4 text-base text-public-foreground transition-colors hover:bg-donation-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-donation sm:px-3 sm:text-xl"
               >
                 {suggestedAmount.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
               </button>
@@ -424,7 +427,7 @@ export function DonationPage() {
           </div>
         </div>
 
-        <div className="mt-auto pt-16">
+        <div className="mt-16 pt-2 sm:mt-20">
           <div className="flex items-center justify-between text-xl font-semibold text-donation">
             <span>Total:</span>
             <span>{formattedAmount}</span>
