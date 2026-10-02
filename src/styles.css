@@ -125,6 +125,20 @@
 }
 
 .dark {
+  /* Public pages preserve their light brand palette regardless of browser theme. */
+  --public-background: oklch(1 0 0);
+  --public-foreground: oklch(0.14 0.01 260);
+  --public-muted: oklch(0.95 0.005 260);
+  --public-muted-foreground: oklch(0.43 0.012 260);
+  --public-border: oklch(0.89 0.008 260);
+  --public-placeholder: oklch(0.82 0.015 250);
+  --donation: oklch(0.7 0.2 145);
+  --donation-soft: oklch(0.95 0.06 145);
+  --donation-foreground: oklch(0.99 0 0);
+  --transparency-background: oklch(0.9713 0.017 128.66);
+  --public-footer: oklch(0.7007 0.2001 145);
+  --public-footer-foreground: oklch(1 0 0);
+  --public-footer-bottom: oklch(0.211 0.0108 151.21);
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
