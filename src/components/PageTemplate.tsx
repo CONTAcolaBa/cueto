@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { PixCheckout } from "@/components/PixCheckout";
 import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
 import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
