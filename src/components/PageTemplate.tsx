@@ -484,13 +484,7 @@ export function DonationPage() {
             <span>Total:</span>
             <span>{formattedAmount}</span>
           </div>
-          <button
-            type="button"
-            className="mt-4 h-16 w-full rounded-2xl bg-donation text-2xl font-semibold text-donation-foreground shadow-sm"
-            aria-label="Contribuir (em breve)"
-          >
-            Contribuir
-          </button>
+          <PixCheckout amount={amount} />
         </div>
       </section>
 
