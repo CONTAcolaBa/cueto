@@ -173,6 +173,11 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+/* Public microsites and checkout always use their light palette, including native controls. */
+.public-theme {
+  color-scheme: light;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

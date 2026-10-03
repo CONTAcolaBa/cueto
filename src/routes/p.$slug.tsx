@@ -34,16 +34,16 @@ export const Route = createFileRoute("/p/$slug")({
   },
   component: PublicPage,
   notFoundComponent: () => (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 text-center">
+    <main className="public-theme flex min-h-screen items-center justify-center bg-public-background px-4 text-center text-public-foreground">
       <div>
-        <h1 className="text-2xl font-semibold text-foreground">Página não encontrada</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Este link não existe ou foi removido.</p>
+        <h1 className="text-2xl font-semibold text-public-foreground">Página não encontrada</h1>
+        <p className="mt-2 text-sm text-public-muted-foreground">Este link não existe ou foi removido.</p>
       </div>
     </main>
   ),
   errorComponent: () => (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 text-center">
-      <p className="text-sm text-muted-foreground">Não foi possível carregar esta página.</p>
+    <main className="public-theme flex min-h-screen items-center justify-center bg-public-background px-4 text-center text-public-foreground">
+      <p className="text-sm text-public-muted-foreground">Não foi possível carregar esta página.</p>
     </main>
   ),
 });
