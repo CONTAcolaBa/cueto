@@ -26,7 +26,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
   }, [menuOpen]);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-public-background text-public-foreground">
+    <main className="public-theme min-h-screen overflow-x-hidden bg-public-background text-public-foreground">
       <header className="border-b border-public-border bg-public-background shadow-sm">
         <div className="mx-auto grid h-24 w-full max-w-4xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:h-28 sm:px-6">
           <img
@@ -412,7 +412,7 @@ export function DonationPage() {
   const formattedAmount = amount.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
   return (
-    <main className="min-h-screen bg-public-background text-public-foreground">
+    <main className="public-theme min-h-screen bg-public-background text-public-foreground">
       <header className="border-b border-public-border bg-public-background shadow-sm">
         <div className="mx-auto flex h-24 w-full max-w-4xl items-center justify-between px-4 sm:h-28 sm:px-6">
           <Link to="/" aria-label="Voltar para a página inicial">
