@@ -41,26 +41,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
         <h1 className="mt-4 text-2xl font-semibold leading-tight sm:text-3xl">{page.title}</h1>
 
-        <section className="mt-6" aria-label="Arrecadação">
-          <p className="text-base text-public-muted-foreground">Arrecadados</p>
-          <p className="mt-1 text-xl font-semibold sm:text-2xl">R$ 713,00 de R$ 45.000,00</p>
-          <div
-            className="mt-3 h-2 overflow-hidden rounded-full bg-public-muted"
-            role="progressbar"
-            aria-label="Progresso da arrecadação"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={1.58}
-          >
-            <div className="h-full w-[1.58%] min-w-2 rounded-full bg-donation" />
-          </div>
-          <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 text-base text-public-muted-foreground">
-            <span>19 doações</span>
-            <span className="rounded-full bg-donation-soft px-2 py-0.5 text-xs font-semibold text-donation">
-              1,58%
-            </span>
-          </div>
-        </section>
+        <FundraisingCounter slug={page.slug} />
 
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-public-border bg-public-background/95 p-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur sm:p-4">
           <div className="mx-auto grid w-full max-w-4xl gap-2 sm:grid-cols-2 sm:gap-3 sm:px-2">
