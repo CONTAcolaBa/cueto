@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { createPixPayment, getPixStatus } from "@/lib/pix.functions";
 
@@ -27,8 +28,8 @@ export function PixCheckout({ amount }: { amount: number }) {
   }, [pix, paid, statusFn]);
 
   async function handleContribute() {
-    if (amount < 1) {
-      setError("Informe um valor de pelo menos R$ 1,00.");
+    if (amount < 10) {
+      setError("Informe um valor de pelo menos R$ 10,00.");
       return;
     }
     setError("");
@@ -85,9 +86,16 @@ export function PixCheckout({ amount }: { amount: number }) {
         type="button"
         onClick={handleContribute}
         disabled={loading}
-        className="mt-4 h-16 w-full rounded-2xl bg-donation text-2xl font-semibold text-donation-foreground shadow-sm disabled:opacity-70"
+        className="mt-4 flex h-16 w-full items-center justify-center gap-3 rounded-2xl bg-donation text-2xl font-semibold text-donation-foreground shadow-sm disabled:opacity-70"
       >
-        {loading ? "Gerando Pix..." : "Contribuir"}
+        {loading ? (
+          <>
+            <Loader2 className="size-7 animate-spin" aria-hidden="true" />
+            <span>Gerando Pix...</span>
+          </>
+        ) : (
+          "Contribuir"
+        )}
       </button>
       {error ? <p className="mt-3 text-center text-sm font-medium text-destructive" role="alert">{error}</p> : null}
     </>
