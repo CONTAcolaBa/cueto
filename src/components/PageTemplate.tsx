@@ -496,23 +496,7 @@ export function DonationPage() {
 
   return (
     <main className="public-theme min-h-screen bg-public-background text-public-foreground">
-      <header className="border-b border-public-border bg-public-background shadow-sm">
-        <div className="mx-auto flex h-24 w-full max-w-4xl items-center justify-between px-4 sm:h-28 sm:px-6">
-          <Link to="/" aria-label="Voltar para a página inicial">
-            <img
-              src="/logo-acao-solidaria.webp"
-              alt="Ação Solidária"
-              className="h-12 w-32 object-contain object-left sm:h-14 sm:w-40"
-            />
-          </Link>
-          <Link
-            to="/"
-            className="rounded-lg px-3 py-2 text-sm font-medium text-public-muted-foreground hover:bg-public-muted"
-          >
-            Voltar
-          </Link>
-        </div>
-      </header>
+      <PublicHeader />
 
       <section className="mx-auto w-full max-w-4xl px-4 pb-10 pt-12 sm:px-6 sm:pt-20">
         <div>
