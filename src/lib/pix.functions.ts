@@ -18,7 +18,7 @@ function getHeaders() {
 
 export const createPixPayment = createServerFn({ method: "POST" })
   .inputValidator((input) =>
-    z.object({ amount: z.number().min(1).max(100000) }).parse(input),
+    z.object({ amount: z.number().min(10).max(100000) }).parse(input),
   )
   .handler(async ({ data }) => {
     const externalId = `doacao_${Date.now()}_${crypto.randomUUID().slice(0, 8)}`;
