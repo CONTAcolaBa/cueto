@@ -14,82 +14,9 @@ import { toast } from "sonner";
  * without touching any other logic in the app.
  */
 export function PageTemplate({ page }: { page: PageContent }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    if (!menuOpen) return;
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") setMenuOpen(false);
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [menuOpen]);
-
   return (
     <main className="public-theme min-h-screen overflow-x-hidden bg-public-background text-public-foreground">
-      <header className="border-b border-public-border bg-public-background shadow-sm">
-        <div className="mx-auto grid h-24 w-full max-w-4xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:h-28 sm:px-6">
-          <img
-            src="/logo-acao-solidaria.webp"
-            alt="Ação Solidária"
-            className="h-12 w-32 object-contain object-left sm:h-14 sm:w-40"
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="shrink-0 text-public-foreground hover:bg-public-muted"
-            aria-label="Abrir menu"
-            aria-expanded={menuOpen}
-            aria-controls="public-quick-menu"
-            onClick={() => setMenuOpen(true)}
-          >
-            <Menu className="size-7" />
-          </Button>
-        </div>
-      </header>
-
-      {menuOpen ? (
-        <div className="fixed inset-0 z-40">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/40"
-            aria-label="Fechar menu"
-            onClick={() => setMenuOpen(false)}
-          />
-          <aside
-            id="public-quick-menu"
-            className="absolute right-0 top-0 flex h-full w-72 max-w-[85vw] flex-col bg-public-background shadow-2xl"
-            role="dialog"
-            aria-label="Menu de navegação"
-          >
-            <div className="flex h-24 items-center justify-between border-b border-public-border px-4 sm:h-28 sm:px-6">
-              <span className="text-sm font-bold uppercase text-public-foreground">Menu</span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="text-public-foreground hover:bg-public-muted"
-                aria-label="Fechar menu"
-                onClick={() => setMenuOpen(false)}
-              >
-                <X className="size-7" />
-              </Button>
-            </div>
-            <nav className="flex flex-col py-2" aria-label="Links rápidos">
-              {["INICIAL", "QUEM SOMOS", "NOSSO PROPÓSITO", "OUTRAS VAQUINHAS"].map((label) => (
-                <span
-                  key={label}
-                  className="block px-6 py-4 text-base font-semibold text-public-foreground"
-                  aria-disabled="true"
-                >
-                  {label}
-                </span>
-              ))}
-            </nav>
-          </aside>
-        </div>
-      ) : null}
+      <PublicHeader />
 
       <article className="mx-auto w-full max-w-4xl px-4 pb-48 pt-7 sm:px-6 sm:pt-10">
         <div className="relative">
