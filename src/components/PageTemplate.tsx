@@ -161,6 +161,181 @@ export function PageTemplate({ page }: { page: PageContent }) {
   );
 }
 
+function PublicHeader() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  return (
+    <>
+      <header className="border-b border-public-border bg-public-background shadow-sm">
+        <div className="mx-auto grid h-24 w-full max-w-4xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 sm:h-28 sm:px-6">
+          <img
+            src="/logo-acao-solidaria.webp"
+            alt="Ação Solidária"
+            className="h-12 w-32 object-contain object-left sm:h-14 sm:w-40"
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="shrink-0 text-public-foreground hover:bg-public-muted"
+            aria-label="Abrir menu"
+            aria-expanded={menuOpen}
+            aria-controls="public-quick-menu"
+            onClick={() => setMenuOpen(true)}
+          >
+            <Menu className="size-7" />
+          </Button>
+        </div>
+      </header>
+
+      {menuOpen ? (
+        <div className="fixed inset-0 z-40">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/40"
+            aria-label="Fechar menu"
+            onClick={() => setMenuOpen(false)}
+          />
+          <aside
+            id="public-quick-menu"
+            className="absolute right-0 top-0 flex h-full w-72 max-w-[85vw] flex-col bg-public-background shadow-2xl"
+            role="dialog"
+            aria-label="Menu de navegação"
+          >
+            <div className="flex h-24 items-center justify-between border-b border-public-border px-4 sm:h-28 sm:px-6">
+              <span className="text-sm font-bold uppercase text-public-foreground">Menu</span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="text-public-foreground hover:bg-public-muted"
+                aria-label="Fechar menu"
+                onClick={() => setMenuOpen(false)}
+              >
+                <X className="size-7" />
+              </Button>
+            </div>
+            <nav className="flex flex-col py-2" aria-label="Links rápidos">
+              {["INICIAL", "QUEM SOMOS", "NOSSO PROPÓSITO", "OUTRAS VAQUINHAS"].map((label) => (
+                <span
+                  key={label}
+                  className="block px-6 py-4 text-base font-semibold text-public-foreground"
+                  aria-disabled="true"
+                >
+                  {label}
+                </span>
+              ))}
+            </nav>
+          </aside>
+        </div>
+      ) : null}
+    </>
+  );
+}
+
+const GOAL = 45000;
+
+type FundraisingState = { raised: number; donations: number };
+
+/**
+ * Arrecadação simulada: começa zerada em cada página e sobe com valores
+ * baixos e aleatórios em intervalos aleatórios a partir de 8 minutos.
+ * O estado é persistido por slug para continuar de onde parou.
+ */
+function FundraisingCounter({ slug }: { slug: string }) {
+  const storageKey = `fundraising:${slug}`;
+  const [state, setState] = useState<FundraisingState>({ raised: 0, donations: 0 });
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved) as FundraisingState;
+        if (typeof parsed.raised === "number" && typeof parsed.donations === "number") {
+          setState(parsed);
+        }
+      }
+    } catch {
+      /* estado local indisponível */
+    }
+  }, [storageKey]);
+
+  useEffect(() => {
+    let timeout: number;
+    function scheduleNext() {
+      // Intervalo aleatório entre 8 e 25 minutos.
+      const delay = (8 + Math.random() * 17) * 60 * 1000;
+      timeout = window.setTimeout(() => {
+        setState((current) => {
+          // Incremento baixo e aleatório: R$ 2,00 a R$ 30,00.
+          const increment = 2 + Math.random() * 28;
+          const next = {
+            raised: Math.min(GOAL, current.raised + increment),
+            donations: current.donations + 1,
+          };
+          try {
+            window.localStorage.setItem(storageKey, JSON.stringify(next));
+          } catch {
+            /* ignora falha de persistência */
+          }
+          return next;
+        });
+        scheduleNext();
+      }, delay);
+    }
+    scheduleNext();
+    return () => window.clearTimeout(timeout);
+  }, [storageKey]);
+
+  const percent = Math.min(100, (state.raised / GOAL) * 100);
+  const formatBRL = (value: number) =>
+    value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+  return (
+    <section className="mt-6" aria-label="Arrecadação">
+      <p className="text-base text-public-muted-foreground">Arrecadados</p>
+      <p className="mt-1 text-xl font-semibold sm:text-2xl">
+        {formatBRL(state.raised)} de {formatBRL(GOAL)}
+      </p>
+      <div
+        className="mt-3 h-2 overflow-hidden rounded-full bg-public-muted"
+        role="progressbar"
+        aria-label="Progresso da arrecadação"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Number(percent.toFixed(2))}
+      >
+        <div
+          className="h-full min-w-2 rounded-full bg-donation transition-[width] duration-700"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+      <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 text-base text-public-muted-foreground">
+        <span>
+          {state.donations} {state.donations === 1 ? "doação" : "doações"}
+        </span>
+        <span className="rounded-full bg-donation-soft px-2 py-0.5 text-xs font-semibold text-donation">
+          {percent.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}%
+        </span>
+      </div>
+    </section>
+  );
+}
+
 function SunHeartIcon() {
   return (
     <svg viewBox="0 0 24 24" className="mt-0.5 size-7 shrink-0" fill="none" aria-hidden="true">
