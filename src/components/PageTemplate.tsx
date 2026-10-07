@@ -223,13 +223,11 @@ function PublicHeader() {
   );
 }
 
-const GOAL = 45000;
 
-type FundraisingState = { raised: number; donations: number };
 
 /** Arrecadação: valores base definidos no dashboard + pagamentos Pix confirmados. */
 function FundraisingCounter({ raised, donations, goal }: { raised: number; donations: number; goal: number }) {
-  const GOAL = goal > 0 ? goal : 10000;
+  const GOAL = goal > 0 ? goal : 45000;
   const state = { raised, donations };
   const percent = Math.min(100, (state.raised / GOAL) * 100);
   const formatBRL = (value: number) =>

@@ -72,6 +72,9 @@ type FormState = {
   slug: string;
   comments: PageComment[];
   faqs: PageFaq[];
+  base_raised: number;
+  base_donations: number;
+  goal: number;
 };
 
 const emptyForm: FormState = {
@@ -82,6 +85,9 @@ const emptyForm: FormState = {
   slug: "",
   comments: [],
   faqs: [],
+  base_raised: 0,
+  base_donations: 0,
+  goal: 45000,
 };
 
 const emptyComment: PageComment = { image_url: "", time: "", name: "", text: "" };
@@ -132,6 +138,9 @@ function Dashboard() {
         button_link: "#",
         comments: values.comments,
         faqs: values.faqs,
+        base_raised: values.base_raised,
+        base_donations: values.base_donations,
+        goal: values.goal,
       };
       return values.id
         ? update({ data: { ...payload, id: values.id } })
@@ -186,6 +195,9 @@ function Dashboard() {
       slug: page.slug,
       comments: page.comments,
       faqs: page.faqs ?? [],
+      base_raised: page.base_raised,
+      base_donations: page.base_donations,
+      goal: page.goal,
     });
     setSlugTouched(true);
     setFormError(null);
@@ -435,6 +447,28 @@ function Dashboard() {
                 onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))}
               />
             </Field>
+
+            <section className="space-y-3 border-t border-border pt-5" aria-labelledby="counters-title">
+              <h3 id="counters-title" className="text-sm font-semibold text-foreground">Contadores de arrecadação</h3>
+              <p className="text-xs text-muted-foreground">
+                Pagamentos Pix confirmados são somados automaticamente a estes valores
+                {form.id ? (() => { const p = pages.find((x) => x.id === form.id); return p ? ` (até agora: R$ ${p.paid_raised.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} em ${p.paid_donations} doações Pix)` : ""; })() : ""}.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <Field label="Valor arrecadado (R$)" id="base_raised">
+                  <Input id="base_raised" type="number" min="0" step="0.01" value={form.base_raised}
+                    onChange={(e) => setForm((f) => ({ ...f, base_raised: Number(e.target.value) || 0 }))} />
+                </Field>
+                <Field label="Nº de doações" id="base_donations">
+                  <Input id="base_donations" type="number" min="0" step="1" value={form.base_donations}
+                    onChange={(e) => setForm((f) => ({ ...f, base_donations: Number(e.target.value) || 0 }))} />
+                </Field>
+                <Field label="Meta (R$)" id="goal">
+                  <Input id="goal" type="number" min="1" step="0.01" value={form.goal}
+                    onChange={(e) => setForm((f) => ({ ...f, goal: Number(e.target.value) || 0 }))} />
+                </Field>
+              </div>
+            </section>
 
             <section className="space-y-4 border-t border-border pt-5" aria-labelledby="faqs-title">
               <div className="flex items-center justify-between gap-3">

@@ -119,7 +119,7 @@ function validate(input: PageInput): PageInput {
     faqs: validateFaqs(input.faqs),
     base_raised: Math.max(0, Number(input.base_raised) || 0),
     base_donations: Math.max(0, Math.floor(Number(input.base_donations) || 0)),
-    goal: Math.max(1, Number(input.goal) || 10000),
+    goal: Math.max(1, Number(input.goal) || 45000),
   };
 }
 
@@ -157,7 +157,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
       button_link: page.button_link,
       comments: (page.comments ?? []) as PageComment[],
       faqs: (page.faqs ?? []) as PageFaq[],
-      goal: Number(p.goal) || 10000,
+      goal: Number(p.goal) || 45000,
       raised: Number(p.base_raised) + Number(p.paid_raised),
       donations: Number(p.base_donations) + Number(p.paid_donations),
     };
