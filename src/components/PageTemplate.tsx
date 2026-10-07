@@ -41,7 +41,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
         <h1 className="mt-4 text-2xl font-semibold leading-tight sm:text-3xl">{page.title}</h1>
 
-        <FundraisingCounter slug={page.slug} />
+        <FundraisingCounter raised={page.raised} donations={page.donations} goal={page.goal} />
 
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-public-border bg-public-background/95 p-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur sm:p-4">
           <div className="mx-auto grid w-full max-w-4xl gap-2 sm:grid-cols-2 sm:gap-3 sm:px-2">
@@ -49,7 +49,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
               asChild
               className="h-12 w-full rounded-lg bg-donation text-[17px] font-semibold text-donation-foreground hover:bg-donation"
             >
-              <Link to="/doacao">
+              <Link to="/doacao/$slug" params={{ slug: page.slug }}>
                 <span>Fazer uma Doação</span>
                 <HandHoldingHeartIcon />
               </Link>
@@ -227,56 +227,10 @@ const GOAL = 45000;
 
 type FundraisingState = { raised: number; donations: number };
 
-/**
- * Arrecadação simulada: começa zerada em cada página e sobe com valores
- * baixos e aleatórios em intervalos aleatórios a partir de 8 minutos.
- * O estado é persistido por slug para continuar de onde parou.
- */
-function FundraisingCounter({ slug }: { slug: string }) {
-  const storageKey = `fundraising:${slug}`;
-  const [state, setState] = useState<FundraisingState>({ raised: 0, donations: 0 });
-
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(storageKey);
-      if (saved) {
-        const parsed = JSON.parse(saved) as FundraisingState;
-        if (typeof parsed.raised === "number" && typeof parsed.donations === "number") {
-          setState(parsed);
-        }
-      }
-    } catch {
-      /* estado local indisponível */
-    }
-  }, [storageKey]);
-
-  useEffect(() => {
-    let timeout: number;
-    function scheduleNext() {
-      // Intervalo aleatório entre 8 e 25 minutos.
-      const delay = (8 + Math.random() * 17) * 60 * 1000;
-      timeout = window.setTimeout(() => {
-        setState((current) => {
-          // Incremento baixo e aleatório: R$ 2,00 a R$ 30,00.
-          const increment = 2 + Math.random() * 28;
-          const next = {
-            raised: Math.min(GOAL, current.raised + increment),
-            donations: current.donations + 1,
-          };
-          try {
-            window.localStorage.setItem(storageKey, JSON.stringify(next));
-          } catch {
-            /* ignora falha de persistência */
-          }
-          return next;
-        });
-        scheduleNext();
-      }, delay);
-    }
-    scheduleNext();
-    return () => window.clearTimeout(timeout);
-  }, [storageKey]);
-
+/** Arrecadação: valores base definidos no dashboard + pagamentos Pix confirmados. */
+function FundraisingCounter({ raised, donations, goal }: { raised: number; donations: number; goal: number }) {
+  const GOAL = goal > 0 ? goal : 10000;
+  const state = { raised, donations };
   const percent = Math.min(100, (state.raised / GOAL) * 100);
   const formatBRL = (value: number) =>
     value.toLocaleString("pt-BR", {
@@ -488,7 +442,7 @@ function ShieldIcon() {
   );
 }
 
-export function DonationPage() {
+export function DonationPage({ slug }: { slug?: string } = {}) {
   const [amount, setAmount] = useState(0);
   const [anonymous, setAnonymous] = useState(false);
   const suggestedAmounts = [25, 30, 50, 100, 200, 300];
@@ -552,7 +506,7 @@ export function DonationPage() {
             <span>Total:</span>
             <span>{formattedAmount}</span>
           </div>
-          <PixCheckout amount={amount} />
+          <PixCheckout amount={amount} slug={slug} />
         </div>
       </section>
 
