@@ -5,7 +5,7 @@ import { createPixPayment, getPixStatus } from "@/lib/pix.functions";
 
 type Pix = { externalId: string; code: string; qrcodeBase64: string };
 
-export function PixCheckout({ amount, slug }: { amount: number; slug?: string }) {
+export function PixCheckout({ amount, slug }: { amount: number; slug?: string | undefined }) {
   const createFn = useServerFn(createPixPayment);
   const statusFn = useServerFn(getPixStatus);
   const [pix, setPix] = useState<Pix | null>(null);
@@ -35,7 +35,7 @@ export function PixCheckout({ amount, slug }: { amount: number; slug?: string })
     setError("");
     setLoading(true);
     try {
-      setPix(await createFn({ data: { amount, slug } }));
+      setPix(await createFn({ data: slug ? { amount, slug } : { amount } }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro ao gerar o Pix.");
     } finally {

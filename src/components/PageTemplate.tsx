@@ -440,7 +440,7 @@ function ShieldIcon() {
   );
 }
 
-export function DonationPage({ slug }: { slug?: string } = {}) {
+export function DonationPage({ slug }: { slug?: string | undefined } = {}) {
   const [amount, setAmount] = useState(0);
   const [anonymous, setAnonymous] = useState(false);
   const suggestedAmounts = [25, 30, 50, 100, 200, 300];
