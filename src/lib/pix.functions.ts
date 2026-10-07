@@ -18,7 +18,7 @@ function getHeaders() {
 
 export const createPixPayment = createServerFn({ method: "POST" })
   .inputValidator((input) =>
-    z.object({ amount: z.number().min(10).max(100000) }).parse(input),
+    z.object({ amount: z.number().min(10).max(100000), slug: z.string().regex(/^[a-z0-9-]+$/).max(80).optional() }).parse(input),
   )
   .handler(async ({ data }) => {
     const externalId = `doacao_${Date.now()}_${crypto.randomUUID().slice(0, 8)}`;
@@ -38,6 +38,10 @@ export const createPixPayment = createServerFn({ method: "POST" })
     if (!res.ok || !json?.data) {
       console.error("BuckPay create error", res.status, json);
       throw new Error("Não foi possível gerar o Pix. Tente novamente.");
+    }
+    if (data.slug) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin.from("pix_payments").insert({ external_id: externalId, slug: data.slug, amount: data.amount });
     }
     return {
       externalId,
@@ -61,5 +65,10 @@ export const getPixStatus = createServerFn({ method: "GET" })
       console.error("BuckPay status error", res.status, json);
       return { status: "unknown" };
     }
-    return { status: json?.data?.status ?? "unknown" };
+    const status = json?.data?.status ?? "unknown";
+    if (status === "paid" || status === "approved") {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin.rpc("confirm_pix_payment" as never, { _external_id: data.externalId } as never);
+    }
+    return { status };
   });

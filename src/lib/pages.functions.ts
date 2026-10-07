@@ -26,6 +26,11 @@ export type PageRecord = {
   clicks: number;
   comments: PageComment[];
   faqs: PageFaq[];
+  base_raised: number;
+  base_donations: number;
+  goal: number;
+  paid_raised: number;
+  paid_donations: number;
   created_at: string;
 };
 
@@ -40,7 +45,8 @@ export type PageContent = Pick<
   | "button_link"
   | "comments"
   | "faqs"
->;
+  | "goal"
+> & { raised: number; donations: number };
 
 export type PageInput = {
   id?: string;
@@ -53,6 +59,9 @@ export type PageInput = {
   button_link: string;
   comments?: PageComment[];
   faqs?: PageFaq[];
+  base_raised?: number;
+  base_donations?: number;
+  goal?: number;
 };
 
 function validateComments(comments: PageComment[] | undefined): PageComment[] {
@@ -108,6 +117,9 @@ function validate(input: PageInput): PageInput {
     button_link: (input.button_link ?? "").trim() || "#",
     comments: validateComments(input.comments),
     faqs: validateFaqs(input.faqs),
+    base_raised: Math.max(0, Number(input.base_raised) || 0),
+    base_donations: Math.max(0, Math.floor(Number(input.base_donations) || 0)),
+    goal: Math.max(1, Number(input.goal) || 45000),
   };
 }
 
@@ -126,7 +138,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
 
     const { data: page, error } = await supabaseAdmin
       .from("pages")
-      .select("slug, title, subtitle, description, image_url, button_text, button_link, comments, faqs")
+      .select("slug, title, subtitle, description, image_url, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations")
       .eq("slug", data.slug)
       .maybeSingle();
 
@@ -134,11 +146,21 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
 
     await supabaseAdmin.rpc("increment_page_visit", { _slug: data.slug });
 
+    const p = page as typeof page & Record<string, number>;
     return {
-      ...page,
+      slug: page.slug,
+      title: page.title,
+      subtitle: page.subtitle,
+      description: page.description,
+      image_url: page.image_url,
+      button_text: page.button_text,
+      button_link: page.button_link,
       comments: (page.comments ?? []) as PageComment[],
       faqs: (page.faqs ?? []) as PageFaq[],
-    } as PageContent;
+      goal: Number(p.goal) || 45000,
+      raised: Number(p.base_raised) + Number(p.paid_raised),
+      donations: Number(p.base_donations) + Number(p.paid_donations),
+    };
   });
 
 /** Public: CTA click tracking, called from the browser on click. */
@@ -156,7 +178,7 @@ export const listMyPages = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("pages")
       .select(
-        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, comments, faqs, created_at",
+        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, created_at",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
@@ -164,6 +186,11 @@ export const listMyPages = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return (data ?? []).map((page) => ({
       ...page,
+      base_raised: Number((page as any).base_raised),
+      base_donations: Number((page as any).base_donations),
+      goal: Number((page as any).goal),
+      paid_raised: Number((page as any).paid_raised),
+      paid_donations: Number((page as any).paid_donations),
       comments: (page.comments ?? []) as PageComment[],
       faqs: (page.faqs ?? []) as PageFaq[],
     })) as PageRecord[];
@@ -184,7 +211,10 @@ export const createPage = createServerFn({ method: "POST" })
       button_link: data.button_link,
       comments: data.comments ?? [],
       faqs: data.faqs ?? [],
-    });
+      base_raised: data.base_raised,
+      base_donations: data.base_donations,
+      goal: data.goal,
+    } as never);
 
     if (error) {
       if (isDuplicateSlug(error)) throw new Error("Este slug já está em uso. Escolha outro.");
@@ -214,7 +244,10 @@ export const updatePage = createServerFn({ method: "POST" })
         button_link: data.button_link,
         comments: data.comments ?? [],
       faqs: data.faqs ?? [],
-      })
+        base_raised: data.base_raised,
+        base_donations: data.base_donations,
+        goal: data.goal,
+      } as never)
       .eq("id", pageId)
       .eq("user_id", context.userId);
 

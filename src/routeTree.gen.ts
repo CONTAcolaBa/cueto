@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as DoacaoRouteImport } from './routes/doacao'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as DoacaoSlugRouteImport } from './routes/doacao_.$slug'
 import { Route as PSlugRouteImport } from './routes/p.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -40,6 +41,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const DoacaoSlugRoute = DoacaoSlugRouteImport.update({
+  id: '/doacao_/$slug',
+  path: '/doacao/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PSlugRoute = PSlugRouteImport.update({
   id: '/p/$slug',
   path: '/p/$slug',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/doacao': typeof DoacaoRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/doacao/$slug': typeof DoacaoSlugRoute
   '/p/$slug': typeof PSlugRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +65,7 @@ export interface FileRoutesByTo {
   '/doacao': typeof DoacaoRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/doacao/$slug': typeof DoacaoSlugRoute
   '/p/$slug': typeof PSlugRoute
 }
 export interface FileRoutesById {
@@ -67,13 +75,15 @@ export interface FileRoutesById {
   '/doacao': typeof DoacaoRoute
   '/login': typeof LoginRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/doacao_/$slug': typeof DoacaoSlugRoute
   '/p/$slug': typeof PSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/doacao' | '/login' | '/dashboard' | '/p/$slug'
+  fullPaths:
+    '/' | '/doacao' | '/login' | '/dashboard' | '/doacao/$slug' | '/p/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/doacao' | '/login' | '/dashboard' | '/p/$slug'
+  to: '/' | '/doacao' | '/login' | '/dashboard' | '/doacao/$slug' | '/p/$slug'
   id:
     | '__root__'
     | '/'
@@ -81,6 +91,7 @@ export interface FileRouteTypes {
     | '/doacao'
     | '/login'
     | '/_authenticated/dashboard'
+    | '/doacao_/$slug'
     | '/p/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -89,6 +100,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   DoacaoRoute: typeof DoacaoRoute
   LoginRoute: typeof LoginRoute
+  DoacaoSlugRoute: typeof DoacaoSlugRoute
   PSlugRoute: typeof PSlugRoute
 }
 
@@ -129,6 +141,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/doacao_/$slug': {
+      id: '/doacao_/$slug'
+      path: '/doacao/$slug'
+      fullPath: '/doacao/$slug'
+      preLoaderRoute: typeof DoacaoSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/p/$slug': {
       id: '/p/$slug'
       path: '/p/$slug'
@@ -155,6 +174,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   DoacaoRoute: DoacaoRoute,
   LoginRoute: LoginRoute,
+  DoacaoSlugRoute: DoacaoSlugRoute,
   PSlugRoute: PSlugRoute,
 }
 export const routeTree = rootRouteImport
