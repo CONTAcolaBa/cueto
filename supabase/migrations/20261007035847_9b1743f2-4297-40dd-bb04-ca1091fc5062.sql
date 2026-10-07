@@ -1,0 +1,2 @@
+ALTER TABLE public.pages ALTER COLUMN goal SET DEFAULT 45000;
+UPDATE public.pages SET goal = 45000 WHERE goal = 10000;
