@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       pages: {
         Row: {
+          base_donations: number
+          base_raised: number
           button_link: string
           button_text: string
           clicks: number
@@ -23,8 +25,11 @@ export type Database = {
           created_at: string
           description: string | null
           faqs: Json
+          goal: number
           id: string
           image_url: string | null
+          paid_donations: number
+          paid_raised: number
           slug: string
           subtitle: string | null
           title: string
@@ -33,6 +38,8 @@ export type Database = {
           visits: number
         }
         Insert: {
+          base_donations?: number
+          base_raised?: number
           button_link?: string
           button_text?: string
           clicks?: number
@@ -40,8 +47,11 @@ export type Database = {
           created_at?: string
           description?: string | null
           faqs?: Json
+          goal?: number
           id?: string
           image_url?: string | null
+          paid_donations?: number
+          paid_raised?: number
           slug: string
           subtitle?: string | null
           title: string
@@ -50,6 +60,8 @@ export type Database = {
           visits?: number
         }
         Update: {
+          base_donations?: number
+          base_raised?: number
           button_link?: string
           button_text?: string
           clicks?: number
@@ -57,8 +69,11 @@ export type Database = {
           created_at?: string
           description?: string | null
           faqs?: Json
+          goal?: number
           id?: string
           image_url?: string | null
+          paid_donations?: number
+          paid_raised?: number
           slug?: string
           subtitle?: string | null
           title?: string
@@ -68,11 +83,42 @@ export type Database = {
         }
         Relationships: []
       }
+      pix_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          external_id: string
+          slug: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          external_id: string
+          slug: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          external_id?: string
+          slug?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      confirm_pix_payment: {
+        Args: { _external_id: string }
+        Returns: undefined
+      }
       increment_page_click: { Args: { _slug: string }; Returns: undefined }
       increment_page_visit: { Args: { _slug: string }; Returns: undefined }
     }
