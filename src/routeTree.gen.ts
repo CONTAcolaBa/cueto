@@ -16,6 +16,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as DoacaoSlugRouteImport } from './routes/doacao_.$slug'
 import { Route as PSlugRouteImport } from './routes/p.$slug'
+import { Route as ApiPublicBuckpayWebhookRouteImport } from './routes/api/public/buckpay-webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -51,6 +52,11 @@ const PSlugRoute = PSlugRouteImport.update({
   path: '/p/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicBuckpayWebhookRoute = ApiPublicBuckpayWebhookRouteImport.update({
+  id: '/api/public/buckpay-webhook',
+  path: '/api/public/buckpay-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/doacao/$slug': typeof DoacaoSlugRoute
   '/p/$slug': typeof PSlugRoute
+  '/api/public/buckpay-webhook': typeof ApiPublicBuckpayWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/doacao/$slug': typeof DoacaoSlugRoute
   '/p/$slug': typeof PSlugRoute
+  '/api/public/buckpay-webhook': typeof ApiPublicBuckpayWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,13 +85,27 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/doacao_/$slug': typeof DoacaoSlugRoute
   '/p/$slug': typeof PSlugRoute
+  '/api/public/buckpay-webhook': typeof ApiPublicBuckpayWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/doacao' | '/login' | '/dashboard' | '/doacao/$slug' | '/p/$slug'
+    | '/'
+    | '/doacao'
+    | '/login'
+    | '/dashboard'
+    | '/doacao/$slug'
+    | '/p/$slug'
+    | '/api/public/buckpay-webhook'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/doacao' | '/login' | '/dashboard' | '/doacao/$slug' | '/p/$slug'
+  to:
+    | '/'
+    | '/doacao'
+    | '/login'
+    | '/dashboard'
+    | '/doacao/$slug'
+    | '/p/$slug'
+    | '/api/public/buckpay-webhook'
   id:
     | '__root__'
     | '/'
@@ -93,6 +115,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/doacao_/$slug'
     | '/p/$slug'
+    | '/api/public/buckpay-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -102,6 +125,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   DoacaoSlugRoute: typeof DoacaoSlugRoute
   PSlugRoute: typeof PSlugRoute
+  ApiPublicBuckpayWebhookRoute: typeof ApiPublicBuckpayWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -155,6 +179,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/buckpay-webhook': {
+      id: '/api/public/buckpay-webhook'
+      path: '/api/public/buckpay-webhook'
+      fullPath: '/api/public/buckpay-webhook'
+      preLoaderRoute: typeof ApiPublicBuckpayWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -176,6 +207,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   DoacaoSlugRoute: DoacaoSlugRoute,
   PSlugRoute: PSlugRoute,
+  ApiPublicBuckpayWebhookRoute: ApiPublicBuckpayWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -3,11 +3,11 @@ import { z } from "zod";
 
 const API_BASE = "https://api.realtechdev.com.br";
 
-const PayloadSchema = z
-  .object({
-    data: z.object({ external_id: z.string().regex(/^doacao_[\w-]+$/).max(80) }).passthrough(),
-  })
-  .passthrough();
+const ExternalId = z.string().regex(/^doacao_[\w-]+$/).max(80);
+const PayloadSchema = z.union([
+  z.object({ data: z.object({ external_id: ExternalId }).passthrough() }).transform((p) => p.data.external_id),
+  z.object({ external_id: ExternalId }).passthrough().transform((p) => p.external_id),
+]);
 
 // BuckPay notifies payment events here. The payload is never trusted:
 // the status is re-checked directly with BuckPay before confirming anything.
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/api/public/buckpay-webhook")({
       POST: async ({ request }) => {
         const parsed = PayloadSchema.safeParse(await request.json().catch(() => null));
         if (!parsed.success) return new Response("ignored", { status: 200 });
-        const externalId = parsed.data.data.external_id;
+        const externalId = parsed.data;
 
         const token = process.env["BUCKPAY_TOKEN"];
         const userAgent = process.env["BUCKPAY_USER_AGENT"];
