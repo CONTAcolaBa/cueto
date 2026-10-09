@@ -138,15 +138,24 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
 
     const { data: page, error } = await supabaseAdmin
       .from("pages")
-      .select("slug, title, subtitle, description, image_url, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations")
+      .select(
+        "slug, title, subtitle, description, image_url, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations",
+      )
       .eq("slug", data.slug)
       .maybeSingle();
 
-    if (error || !page) return null;
+    if (error) {
+      console.error("[Supabase] Failed to load public page by slug.", {
+        code: error.code,
+        message: error.message,
+      });
+      throw new Error("Não foi possível consultar a página pública no Supabase.");
+    }
+
+    if (!page) return null;
 
     await supabaseAdmin.rpc("increment_page_visit", { _slug: data.slug });
 
-    const p = page as typeof page & Record<string, number>;
     return {
       slug: page.slug,
       title: page.title,
@@ -157,9 +166,9 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
       button_link: page.button_link,
       comments: (page.comments ?? []) as PageComment[],
       faqs: (page.faqs ?? []) as PageFaq[],
-      goal: Number(p.goal) || 45000,
-      raised: Number(p.base_raised) + Number(p.paid_raised),
-      donations: Number(p.base_donations) + Number(p.paid_donations),
+      goal: Number(page.goal) || 45000,
+      raised: Number(page.base_raised) + Number(page.paid_raised),
+      donations: Number(page.base_donations) + Number(page.paid_donations),
     };
   });
 
@@ -186,11 +195,11 @@ export const listMyPages = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return (data ?? []).map((page) => ({
       ...page,
-      base_raised: Number((page as any).base_raised),
-      base_donations: Number((page as any).base_donations),
-      goal: Number((page as any).goal),
-      paid_raised: Number((page as any).paid_raised),
-      paid_donations: Number((page as any).paid_donations),
+      base_raised: Number(page.base_raised),
+      base_donations: Number(page.base_donations),
+      goal: Number(page.goal),
+      paid_raised: Number(page.paid_raised),
+      paid_donations: Number(page.paid_donations),
       comments: (page.comments ?? []) as PageComment[],
       faqs: (page.faqs ?? []) as PageFaq[],
     })) as PageRecord[];
@@ -243,7 +252,7 @@ export const updatePage = createServerFn({ method: "POST" })
         button_text: data.button_text,
         button_link: data.button_link,
         comments: data.comments ?? [],
-      faqs: data.faqs ?? [],
+        faqs: data.faqs ?? [],
         base_raised: data.base_raised,
         base_donations: data.base_donations,
         goal: data.goal,
