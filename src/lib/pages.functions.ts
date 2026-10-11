@@ -31,6 +31,7 @@ export type PageRecord = {
   goal: number;
   paid_raised: number;
   paid_donations: number;
+  pix_key: string;
   created_at: string;
 };
 
@@ -46,6 +47,7 @@ export type PageContent = Pick<
   | "comments"
   | "faqs"
   | "goal"
+  | "pix_key"
 > & { raised: number; donations: number };
 
 export type PageInput = {
@@ -62,6 +64,7 @@ export type PageInput = {
   base_raised?: number;
   base_donations?: number;
   goal?: number;
+  pix_key?: string;
 };
 
 function validateComments(comments: PageComment[] | undefined): PageComment[] {
@@ -120,6 +123,7 @@ function validate(input: PageInput): PageInput {
     base_raised: Math.max(0, Number(input.base_raised) || 0),
     base_donations: Math.max(0, Math.floor(Number(input.base_donations) || 0)),
     goal: Math.max(1, Number(input.goal) || 45000),
+    pix_key: (input.pix_key ?? "").trim() || "vaquinhasolidaria@gmail.com",
   };
 }
 
@@ -139,7 +143,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
     const { data: page, error } = await supabaseAdmin
       .from("pages")
       .select(
-        "slug, title, subtitle, description, image_url, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations",
+        "slug, title, subtitle, description, image_url, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key",
       )
       .eq("slug", data.slug)
       .maybeSingle();
@@ -167,6 +171,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
       comments: (page.comments ?? []) as PageComment[],
       faqs: (page.faqs ?? []) as PageFaq[],
       goal: Number(page.goal) || 45000,
+      pix_key: page.pix_key || "vaquinhasolidaria@gmail.com",
       raised: Number(page.base_raised) + Number(page.paid_raised),
       donations: Number(page.base_donations) + Number(page.paid_donations),
     };
@@ -187,7 +192,7 @@ export const listMyPages = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("pages")
       .select(
-        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, created_at",
+        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key, created_at",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
@@ -223,6 +228,7 @@ export const createPage = createServerFn({ method: "POST" })
       base_raised: data.base_raised,
       base_donations: data.base_donations,
       goal: data.goal,
+      pix_key: data.pix_key,
     } as never);
 
     if (error) {
@@ -256,6 +262,7 @@ export const updatePage = createServerFn({ method: "POST" })
         base_raised: data.base_raised,
         base_donations: data.base_donations,
         goal: data.goal,
+        pix_key: data.pix_key,
       } as never)
       .eq("id", pageId)
       .eq("user_id", context.userId);

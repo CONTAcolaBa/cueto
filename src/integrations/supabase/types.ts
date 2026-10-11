@@ -30,6 +30,7 @@ export type Database = {
           image_url: string | null
           paid_donations: number
           paid_raised: number
+          pix_key: string
           slug: string
           subtitle: string | null
           title: string
@@ -52,6 +53,7 @@ export type Database = {
           image_url?: string | null
           paid_donations?: number
           paid_raised?: number
+          pix_key?: string
           slug: string
           subtitle?: string | null
           title: string
@@ -74,6 +76,7 @@ export type Database = {
           image_url?: string | null
           paid_donations?: number
           paid_raised?: number
+          pix_key?: string
           slug?: string
           subtitle?: string | null
           title?: string

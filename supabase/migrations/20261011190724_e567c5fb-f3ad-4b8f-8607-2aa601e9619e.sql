@@ -1,0 +1,1 @@
+ALTER TABLE public.pages ADD COLUMN IF NOT EXISTS pix_key TEXT NOT NULL DEFAULT 'vaquinhasolidaria@gmail.com';

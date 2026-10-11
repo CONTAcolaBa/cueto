@@ -80,7 +80,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </p>
         ) : null}
 
-        <PixDonationSection />
+        <PixDonationSection pixKey={page.pix_key} />
 
         <CommentsSection comments={page.comments} />
 
@@ -294,8 +294,7 @@ function FooterLink({ label }: { label: string }) {
   );
 }
 
-function PixDonationSection() {
-  const pixKey = "vaquinhasolidaria@gmail.com";
+function PixDonationSection({ pixKey }: { pixKey: string }) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -327,7 +326,7 @@ function PixDonationSection() {
         type="button"
         onClick={handleCopy}
         className="mt-7 flex w-full max-w-sm items-center gap-3 rounded-[24px] bg-[#2e7d32] px-5 py-4 text-left text-white shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#246428] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2e7d32] focus-visible:ring-offset-2 active:scale-[0.99]"
-        aria-label="Copiar chave Pix vaquinhasolidaria@gmail.com"
+        aria-label={`Copiar chave Pix ${pixKey}`}
       >
         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/15">
           {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
