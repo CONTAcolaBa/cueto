@@ -452,6 +452,16 @@ function Dashboard() {
               />
             </Field>
 
+            <Field label="Chave Pix" id="pix_key">
+              <Input
+                id="pix_key"
+                type="text"
+                placeholder="E-mail, CPF, telefone ou chave aleatória"
+                value={form.pix_key}
+                onChange={(e) => setForm((f) => ({ ...f, pix_key: e.target.value }))}
+              />
+            </Field>
+
             <section className="space-y-3 border-t border-border pt-5" aria-labelledby="counters-title">
               <h3 id="counters-title" className="text-sm font-semibold text-foreground">Contadores de arrecadação</h3>
               <p className="text-xs text-muted-foreground">

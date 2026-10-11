@@ -80,7 +80,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </p>
         ) : null}
 
-        <PixDonationSection />
+        <PixDonationSection pixKey={page.pix_key} />
 
         <CommentsSection comments={page.comments} />
 
@@ -294,8 +294,7 @@ function FooterLink({ label }: { label: string }) {
   );
 }
 
-function PixDonationSection() {
-  const pixKey = "vaquinhasolidaria@gmail.com";
+function PixDonationSection({ pixKey }: { pixKey: string }) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
