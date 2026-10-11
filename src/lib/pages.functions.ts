@@ -31,6 +31,7 @@ export type PageRecord = {
   goal: number;
   paid_raised: number;
   paid_donations: number;
+  pix_key: string;
   created_at: string;
 };
 
@@ -46,6 +47,7 @@ export type PageContent = Pick<
   | "comments"
   | "faqs"
   | "goal"
+  | "pix_key"
 > & { raised: number; donations: number };
 
 export type PageInput = {
@@ -62,6 +64,7 @@ export type PageInput = {
   base_raised?: number;
   base_donations?: number;
   goal?: number;
+  pix_key?: string;
 };
 
 function validateComments(comments: PageComment[] | undefined): PageComment[] {
