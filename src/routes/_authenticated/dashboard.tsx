@@ -75,6 +75,7 @@ type FormState = {
   base_raised: number;
   base_donations: number;
   goal: number;
+  pix_key: string;
 };
 
 const emptyForm: FormState = {
@@ -88,6 +89,7 @@ const emptyForm: FormState = {
   base_raised: 0,
   base_donations: 0,
   goal: 45000,
+  pix_key: "vaquinhasolidaria@gmail.com",
 };
 
 const emptyComment: PageComment = { image_url: "", time: "", name: "", text: "" };
@@ -141,6 +143,7 @@ function Dashboard() {
         base_raised: values.base_raised,
         base_donations: values.base_donations,
         goal: values.goal,
+        pix_key: values.pix_key,
       };
       return values.id
         ? update({ data: { ...payload, id: values.id } })
@@ -198,6 +201,7 @@ function Dashboard() {
       base_raised: page.base_raised,
       base_donations: page.base_donations,
       goal: page.goal,
+      pix_key: page.pix_key,
     });
     setSlugTouched(true);
     setFormError(null);
