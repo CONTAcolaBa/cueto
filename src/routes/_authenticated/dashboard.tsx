@@ -1,3 +1,4 @@
+import { getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -53,6 +54,57 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
+function MediaField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const [mode, setMode] = useState<"image" | "video">(isVideoEmbed(value) ? "video" : "image");
+  const invalidVideo = mode === "video" && value.trim() !== "" && !getVideoEmbedSrc(value);
+  function switchMode(next: "image" | "video") {
+    if (next === mode) return;
+    setMode(next);
+    onChange("");
+  }
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        {(["image", "video"] as const).map((option) => (
+          <Button
+            key={option}
+            type="button"
+            size="sm"
+            variant={mode === option ? "default" : "outline"}
+            onClick={() => switchMode(option)}
+          >
+            {option === "image" ? "Imagem" : "Vídeo"}
+          </Button>
+        ))}
+      </div>
+      {mode === "image" ? (
+        <Field label="URL da imagem" id="image_url">
+          <Input
+            id="image_url"
+            type="url"
+            placeholder="https://..."
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        </Field>
+      ) : (
+        <Field label="Código de incorporação do vídeo" id="video_embed">
+          <Textarea
+            id="video_embed"
+            rows={3}
+            placeholder='<iframe src="https://www.youtube.com/embed/..."></iframe>'
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+          />
+          {invalidVideo ? (
+            <p className="text-xs text-destructive">Cole um código com &lt;iframe src="https://..."&gt;.</p>
+          ) : null}
+        </Field>
+      )}
+    </div>
+  );
+}
+
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -69,6 +121,7 @@ type FormState = {
   subtitle: string;
   description: string;
   image_url: string;
+  share_link: string;
   slug: string;
   comments: PageComment[];
   faqs: PageFaq[];
@@ -83,6 +136,7 @@ const emptyForm: FormState = {
   subtitle: "",
   description: "",
   image_url: "",
+  share_link: "",
   slug: "",
   comments: [],
   faqs: [],
@@ -137,7 +191,7 @@ function Dashboard() {
         description: values.description,
         image_url: values.image_url,
         button_text: "Fazer uma Doação",
-        button_link: "#",
+        button_link: values.share_link.trim() || "#",
         comments: values.comments,
         faqs: values.faqs,
         base_raised: values.base_raised,
@@ -195,6 +249,7 @@ function Dashboard() {
       subtitle: page.subtitle ?? "",
       description: page.description ?? "",
       image_url: page.image_url ?? "",
+      share_link: page.button_link && page.button_link !== "#" ? page.button_link : "",
       slug: page.slug,
       comments: page.comments,
       faqs: page.faqs ?? [],
@@ -311,7 +366,7 @@ function Dashboard() {
                 className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4"
               >
                 <div className="flex items-start gap-3">
-                  {page.image_url ? (
+                  {page.image_url && !isVideoEmbed(page.image_url) ? (
                     <img
                       src={page.image_url}
                       alt={page.title}
@@ -442,13 +497,18 @@ function Dashboard() {
               />
             </Field>
 
-            <Field label="URL da imagem" id="image_url">
+            <MediaField
+              value={form.image_url}
+              onChange={(value) => setForm((f) => ({ ...f, image_url: value }))}
+            />
+
+            <Field label="Link do botão Compartilhar" id="share_link">
               <Input
-                id="image_url"
+                id="share_link"
                 type="url"
                 placeholder="https://..."
-                value={form.image_url}
-                onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))}
+                value={form.share_link}
+                onChange={(e) => setForm((f) => ({ ...f, share_link: e.target.value }))}
               />
             </Field>
 
