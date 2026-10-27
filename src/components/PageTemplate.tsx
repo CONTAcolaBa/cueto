@@ -62,16 +62,29 @@ export function PageTemplate({ page }: { page: PageContent }) {
                 <HandHoldingHeartIcon />
               </Link>
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="h-12 w-full rounded-lg border border-donation bg-public-background text-base font-semibold text-donation hover:bg-public-background"
-              aria-disabled="true"
-              tabIndex={-1}
-            >
-              <span>Compartilhar</span>
-              <ShareIcon />
-            </Button>
+            {page.button_link && page.button_link !== "#" ? (
+              <Button
+                asChild
+                variant="outline"
+                className="h-12 w-full rounded-lg border border-donation bg-public-background text-base font-semibold text-donation hover:bg-public-background"
+              >
+                <a href={page.button_link} target="_blank" rel="noopener noreferrer">
+                  <span>Compartilhar</span>
+                  <ShareIcon />
+                </a>
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                className="h-12 w-full rounded-lg border border-donation bg-public-background text-base font-semibold text-donation hover:bg-public-background"
+                aria-disabled="true"
+                tabIndex={-1}
+              >
+                <span>Compartilhar</span>
+                <ShareIcon />
+              </Button>
+            )}
           </div>
         </div>
 
