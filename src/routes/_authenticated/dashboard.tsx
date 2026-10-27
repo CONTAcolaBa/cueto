@@ -498,6 +498,7 @@ function Dashboard() {
             </Field>
 
             <MediaField
+              key={form.id ?? "new"}
               value={form.image_url}
               onChange={(value) => setForm((f) => ({ ...f, image_url: value }))}
             />
