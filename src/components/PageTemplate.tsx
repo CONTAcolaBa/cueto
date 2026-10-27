@@ -571,7 +571,6 @@ export function DonationPage({ slug }: { slug?: string | undefined } = {}) {
           </p>
         </div>
       </footer>
-      <div className="h-24 bg-public-background" aria-hidden="true" />
     </main>
   );
 }
