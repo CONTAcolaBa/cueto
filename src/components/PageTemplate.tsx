@@ -20,7 +20,15 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
       <article className="mx-auto w-full max-w-4xl px-4 pb-48 pt-7 sm:px-6 sm:pt-10">
         <div className="relative">
-          {page.image_url ? (
+          {getVideoEmbedSrc(page.image_url) ? (
+            <iframe
+              src={getVideoEmbedSrc(page.image_url)!}
+              title={page.title}
+              className="aspect-video w-full rounded-[16px] border-0 bg-public-placeholder"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          ) : page.image_url && !isVideoEmbed(page.image_url) ? (
             <img
               src={page.image_url}
               alt={page.title}
