@@ -3,6 +3,7 @@ import { PixCheckout } from "@/components/PixCheckout";
 import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
 import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +21,15 @@ export function PageTemplate({ page }: { page: PageContent }) {
 
       <article className="mx-auto w-full max-w-4xl px-4 pb-48 pt-7 sm:px-6 sm:pt-10">
         <div className="relative">
-          {page.image_url ? (
+          {getVideoEmbedSrc(page.image_url) ? (
+            <iframe
+              src={getVideoEmbedSrc(page.image_url)!}
+              title={page.title}
+              className="aspect-video w-full rounded-[16px] border-0 bg-public-placeholder"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          ) : page.image_url && !isVideoEmbed(page.image_url) ? (
             <img
               src={page.image_url}
               alt={page.title}
@@ -54,16 +63,29 @@ export function PageTemplate({ page }: { page: PageContent }) {
                 <HandHoldingHeartIcon />
               </Link>
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="h-12 w-full rounded-lg border border-donation bg-public-background text-base font-semibold text-donation hover:bg-public-background"
-              aria-disabled="true"
-              tabIndex={-1}
-            >
-              <span>Compartilhar</span>
-              <ShareIcon />
-            </Button>
+            {page.button_link && page.button_link !== "#" ? (
+              <Button
+                asChild
+                variant="outline"
+                className="h-12 w-full rounded-lg border border-donation bg-public-background text-base font-semibold text-donation hover:bg-public-background"
+              >
+                <a href={page.button_link} target="_blank" rel="noopener noreferrer">
+                  <span>Compartilhar</span>
+                  <ShareIcon />
+                </a>
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                className="h-12 w-full rounded-lg border border-donation bg-public-background text-base font-semibold text-donation hover:bg-public-background"
+                aria-disabled="true"
+                tabIndex={-1}
+              >
+                <span>Compartilhar</span>
+                <ShareIcon />
+              </Button>
+            )}
           </div>
         </div>
 
@@ -549,7 +571,6 @@ export function DonationPage({ slug }: { slug?: string | undefined } = {}) {
           </p>
         </div>
       </footer>
-      <div className="h-24 bg-public-background" aria-hidden="true" />
     </main>
   );
 }
