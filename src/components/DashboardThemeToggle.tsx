@@ -24,7 +24,7 @@ function writeStoredTheme(theme: DashboardTheme) {
 }
 
 function applyTheme(theme: DashboardTheme) {
-  document.documentElement.dataset.dashboardTheme = theme;
+  document.documentElement.dataset["dashboardTheme"] = theme;
 }
 
 /**
@@ -40,7 +40,7 @@ export function DashboardThemeToggle() {
     setTheme(stored);
     applyTheme(stored);
     return () => {
-      delete document.documentElement.dataset.dashboardTheme;
+      delete document.documentElement.dataset["dashboardTheme"];
     };
   }, []);
 
