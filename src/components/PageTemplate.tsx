@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { PixCheckout } from "@/components/PixCheckout";
-import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
+import type { PageComment, PageContent, PageFaq, } from "@/lib/pages.functions";
+import { trackPageClick } from "@/lib/pages.functions";
 import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
@@ -102,7 +104,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
           </p>
         ) : null}
 
-        <PixDonationSection pixKey={page.pix_key} />
+        <PixDonationSection pixKey={page.pix_key} slug={page.slug} />
 
         <CommentsSection comments={page.comments} />
 
