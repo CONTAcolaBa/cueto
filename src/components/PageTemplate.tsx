@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { PixCheckout } from "@/components/PixCheckout";
-import type { PageComment, PageContent, PageFaq, } from "@/lib/pages.functions";
+import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
 import { trackPageClick } from "@/lib/pages.functions";
 import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -318,10 +318,14 @@ function FooterLink({ label }: { label: string }) {
   );
 }
 
-function PixDonationSection({ pixKey }: { pixKey: string }) {
+function PixDonationSection({ pixKey, slug }: { pixKey: string; slug: string }) {
   const [copied, setCopied] = useState(false);
+  const trackClick = useServerFn(trackPageClick);
 
   async function handleCopy() {
+    trackClick({ data: { slug } }).catch(() => {
+      /* métrica não bloqueia a cópia da chave */
+    });
     try {
       await navigator.clipboard.writeText(pixKey);
       setCopied(true);
