@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { DashboardThemeToggle } from "@/components/DashboardThemeToggle";
 import {
   Dialog,
   DialogContent,
@@ -291,6 +292,7 @@ function Dashboard() {
             <span className="text-lg font-bold tracking-tight text-foreground">PageMult</span>
           </div>
           <div className="flex items-center gap-3">
+            <DashboardThemeToggle />
             <Avatar className="size-9 border border-border">
               <AvatarFallback className="bg-secondary text-secondary-foreground">
                 {(email[0] ?? "?").toUpperCase()}
