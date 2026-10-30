@@ -6,6 +6,7 @@ import { trackPageClick } from "@/lib/pages.functions";
 import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { getScriptEmbedDoc, getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,26 +18,35 @@ import { toast } from "sonner";
  * without touching any other logic in the app.
  */
 export function PageTemplate({ page }: { page: PageContent }) {
+  const videoEmbedSrc = getVideoEmbedSrc(page.image_url);
+  const scriptEmbedDoc = getScriptEmbedDoc(page.image_url);
+  const isVideo = Boolean(videoEmbedSrc || scriptEmbedDoc);
+  const isVerticalVideo = isVideo && page.video_format === "vertical";
+  const videoBoxClass = isVerticalVideo ? "mx-auto aspect-[9/16] w-full max-w-[420px]" : "w-full";
+  const videoClass = cn(
+    "rounded-[16px] border-0 bg-public-placeholder",
+    isVerticalVideo ? "h-full w-full" : "aspect-video w-full",
+  );
   return (
     <main className="public-theme min-h-screen overflow-x-hidden bg-public-background text-public-foreground">
       <PublicHeader />
 
       <article className="mx-auto w-full max-w-4xl px-4 pb-48 pt-7 sm:px-6 sm:pt-10">
-        <div className="relative">
-          {getVideoEmbedSrc(page.image_url) ? (
+        <div className={cn("relative", videoBoxClass)}>
+          {videoEmbedSrc ? (
             <iframe
-              src={getVideoEmbedSrc(page.image_url)!}
+              src={videoEmbedSrc}
               title={page.title}
-              className="aspect-video w-full rounded-[16px] border-0 bg-public-placeholder"
+              className={videoClass}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
-          ) : getScriptEmbedDoc(page.image_url) ? (
+          ) : scriptEmbedDoc ? (
             <iframe
-              srcDoc={getScriptEmbedDoc(page.image_url)!}
+              srcDoc={scriptEmbedDoc}
               title={page.title}
               sandbox="allow-scripts allow-popups allow-presentation"
-              className="aspect-video w-full rounded-[16px] border-0 bg-public-placeholder"
+              className={videoClass}
               allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
               allowFullScreen
             />
