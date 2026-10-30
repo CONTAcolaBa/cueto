@@ -1,3 +1,13 @@
+/** Shape of the main video: landscape (16:9) or portrait (9:16). */
+export type VideoFormat = "horizontal" | "vertical";
+
+export const VIDEO_FORMATS: readonly VideoFormat[] = ["horizontal", "vertical"];
+
+/** Anything unknown (including missing values) falls back to the landscape format. */
+export function normalizeVideoFormat(value: unknown): VideoFormat {
+  return value === "vertical" ? "vertical" : "horizontal";
+}
+
 /** The main media field stores either an image URL or a video embed code (never both). */
 export function isVideoEmbed(value: string | null | undefined) {
   return Boolean(value && value.trim().startsWith("<"));
