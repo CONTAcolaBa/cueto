@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { normalizeVideoFormat, type VideoFormat } from "@/lib/media";
 
 export type PageComment = {
   image_url: string;
@@ -20,6 +21,7 @@ export type PageRecord = {
   subtitle: string | null;
   description: string | null;
   image_url: string | null;
+  video_format: VideoFormat;
   button_text: string;
   button_link: string;
   visits: number;
@@ -42,6 +44,7 @@ export type PageContent = Pick<
   | "subtitle"
   | "description"
   | "image_url"
+  | "video_format"
   | "button_text"
   | "button_link"
   | "comments"
@@ -57,6 +60,7 @@ export type PageInput = {
   subtitle: string;
   description: string;
   image_url: string;
+  video_format?: VideoFormat;
   button_text: string;
   button_link: string;
   comments?: PageComment[];
@@ -116,6 +120,7 @@ function validate(input: PageInput): PageInput {
     subtitle: (input.subtitle ?? "").trim(),
     description: (input.description ?? "").trim(),
     image_url: (input.image_url ?? "").trim(),
+    video_format: normalizeVideoFormat(input.video_format),
     button_text: (input.button_text ?? "").trim() || "Saiba mais",
     button_link: (input.button_link ?? "").trim() || "#",
     comments: validateComments(input.comments),
@@ -143,7 +148,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
     const { data: page, error } = await supabaseAdmin
       .from("pages")
       .select(
-        "slug, title, subtitle, description, image_url, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key",
+        "slug, title, subtitle, description, image_url, video_format, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key",
       )
       .eq("slug", data.slug)
       .maybeSingle();
@@ -166,6 +171,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
       subtitle: page.subtitle,
       description: page.description,
       image_url: page.image_url,
+      video_format: normalizeVideoFormat(page.video_format),
       button_text: page.button_text,
       button_link: page.button_link,
       comments: (page.comments ?? []) as PageComment[],
@@ -192,7 +198,7 @@ export const listMyPages = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("pages")
       .select(
-        "id, slug, title, subtitle, description, image_url, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key, created_at",
+        "id, slug, title, subtitle, description, image_url, video_format, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key, created_at",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
@@ -221,6 +227,7 @@ export const createPage = createServerFn({ method: "POST" })
       subtitle: data.subtitle || null,
       description: data.description || null,
       image_url: data.image_url || null,
+      video_format: normalizeVideoFormat(data.video_format),
       button_text: data.button_text,
       button_link: data.button_link,
       comments: data.comments ?? [],
@@ -255,6 +262,7 @@ export const updatePage = createServerFn({ method: "POST" })
         subtitle: data.subtitle || null,
         description: data.description || null,
         image_url: data.image_url || null,
+        video_format: normalizeVideoFormat(data.video_format),
         button_text: data.button_text,
         button_link: data.button_link,
         comments: data.comments ?? [],

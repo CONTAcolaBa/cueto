@@ -1,4 +1,4 @@
-import { isValidVideoEmbed, isVideoEmbed } from "@/lib/media";
+import { isValidVideoEmbed, isVideoEmbed, VIDEO_FORMATS, type VideoFormat } from "@/lib/media";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -55,7 +55,17 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
-function MediaField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+function MediaField({
+  value,
+  onChange,
+  format,
+  onFormatChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  format: VideoFormat;
+  onFormatChange: (format: VideoFormat) => void;
+}) {
   const [mode, setMode] = useState<"image" | "video">(isVideoEmbed(value) ? "video" : "image");
   const invalidVideo = mode === "video" && value.trim() !== "" && !isValidVideoEmbed(value);
   function switchMode(next: "image" | "video") {
@@ -102,6 +112,24 @@ function MediaField({ value, onChange }: { value: string; onChange: (value: stri
           ) : null}
         </Field>
       )}
+      {mode === "video" ? (
+        <div className="space-y-1.5">
+          <span className="text-sm font-medium text-foreground">Formato do vídeo</span>
+          <div className="flex gap-2">
+            {VIDEO_FORMATS.map((option) => (
+              <Button
+                key={option}
+                type="button"
+                size="sm"
+                variant={format === option ? "default" : "outline"}
+                onClick={() => onFormatChange(option)}
+              >
+                {option === "horizontal" ? "Horizontal (16:9)" : "Vertical (9:16)"}
+              </Button>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -122,6 +150,7 @@ type FormState = {
   subtitle: string;
   description: string;
   image_url: string;
+  video_format: VideoFormat;
   share_link: string;
   slug: string;
   comments: PageComment[];
@@ -137,6 +166,7 @@ const emptyForm: FormState = {
   subtitle: "",
   description: "",
   image_url: "",
+  video_format: "horizontal",
   share_link: "",
   slug: "",
   comments: [],
@@ -191,6 +221,7 @@ function Dashboard() {
         subtitle: values.subtitle,
         description: values.description,
         image_url: values.image_url,
+        video_format: values.video_format,
         button_text: "Fazer uma Doação",
         button_link: values.share_link.trim() || "#",
         comments: values.comments,
@@ -250,6 +281,7 @@ function Dashboard() {
       subtitle: page.subtitle ?? "",
       description: page.description ?? "",
       image_url: page.image_url ?? "",
+      video_format: page.video_format,
       share_link: page.button_link && page.button_link !== "#" ? page.button_link : "",
       slug: page.slug,
       comments: page.comments,
@@ -503,6 +535,8 @@ function Dashboard() {
               key={form.id ?? "new"}
               value={form.image_url}
               onChange={(value) => setForm((f) => ({ ...f, image_url: value }))}
+              format={form.video_format}
+              onFormatChange={(video_format) => setForm((f) => ({ ...f, video_format }))}
             />
 
             <Field label="Link do botão Compartilhar" id="share_link">
