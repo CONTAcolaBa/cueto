@@ -16,3 +16,23 @@ export function getVideoEmbedSrc(value: string | null | undefined): string | nul
     return null;
   }
 }
+
+/** True when the embed code loads an external https script (e.g. video players like VTurb/Panda). */
+export function isScriptEmbed(value: string | null | undefined) {
+  return isVideoEmbed(value) && /<script[^>]*\ssrc\s*=\s*["']https:\/\//i.test(value!);
+}
+
+/**
+ * Builds an isolated document for script-based embeds. It is rendered in an iframe
+ * sandboxed WITHOUT allow-same-origin, so the script can never touch the site's
+ * cookies, storage or logged-in session.
+ */
+export function getScriptEmbedDoc(value: string | null | undefined): string | null {
+  if (!isScriptEmbed(value)) return null;
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;background:transparent}</style></head><body>${value!.trim()}</body></html>`;
+}
+
+/** Any accepted video embed: iframe with https src, or a https script embed. */
+export function isValidVideoEmbed(value: string | null | undefined) {
+  return Boolean(getVideoEmbedSrc(value) || getScriptEmbedDoc(value));
+}
