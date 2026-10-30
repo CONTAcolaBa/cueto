@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { normalizeVideoFormat, type VideoFormat } from "@/lib/media";
 
 export type PageComment = {
   image_url: string;
@@ -20,6 +21,7 @@ export type PageRecord = {
   subtitle: string | null;
   description: string | null;
   image_url: string | null;
+  video_format: VideoFormat;
   button_text: string;
   button_link: string;
   visits: number;
@@ -42,6 +44,7 @@ export type PageContent = Pick<
   | "subtitle"
   | "description"
   | "image_url"
+  | "video_format"
   | "button_text"
   | "button_link"
   | "comments"
@@ -57,6 +60,7 @@ export type PageInput = {
   subtitle: string;
   description: string;
   image_url: string;
+  video_format?: VideoFormat;
   button_text: string;
   button_link: string;
   comments?: PageComment[];
