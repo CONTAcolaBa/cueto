@@ -5,7 +5,7 @@ import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
 import { trackPageClick } from "@/lib/pages.functions";
 import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
+import { getScriptEmbedDoc, getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,15 @@ export function PageTemplate({ page }: { page: PageContent }) {
               title={page.title}
               className="aspect-video w-full rounded-[16px] border-0 bg-public-placeholder"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          ) : getScriptEmbedDoc(page.image_url) ? (
+            <iframe
+              srcDoc={getScriptEmbedDoc(page.image_url)!}
+              title={page.title}
+              sandbox="allow-scripts allow-popups allow-presentation"
+              className="aspect-video w-full rounded-[16px] border-0 bg-public-placeholder"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
               allowFullScreen
             />
           ) : page.image_url && !isVideoEmbed(page.image_url) ? (

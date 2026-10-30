@@ -1,4 +1,4 @@
-import { getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
+import { isValidVideoEmbed, isVideoEmbed } from "@/lib/media";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -57,7 +57,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function MediaField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   const [mode, setMode] = useState<"image" | "video">(isVideoEmbed(value) ? "video" : "image");
-  const invalidVideo = mode === "video" && value.trim() !== "" && !getVideoEmbedSrc(value);
+  const invalidVideo = mode === "video" && value.trim() !== "" && !isValidVideoEmbed(value);
   function switchMode(next: "image" | "video") {
     if (next === mode) return;
     setMode(next);
@@ -98,7 +98,7 @@ function MediaField({ value, onChange }: { value: string; onChange: (value: stri
             onChange={(e) => onChange(e.target.value)}
           />
           {invalidVideo ? (
-            <p className="text-xs text-destructive">Cole um código com &lt;iframe src="https://..."&gt;.</p>
+            <p className="text-xs text-destructive">Cole um código com &lt;iframe src="https://..."&gt; ou &lt;script src="https://..."&gt;.</p>
           ) : null}
         </Field>
       )}
