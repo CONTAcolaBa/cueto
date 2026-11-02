@@ -91,7 +91,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
                 className="h-12 w-full rounded-lg border border-donation bg-public-background text-base font-semibold text-donation hover:bg-public-background"
               >
                 <a href={page.button_link} target="_blank" rel="noopener noreferrer">
-                  <span>Compartilhar</span>
+                  <span>Compartilhar no Whatsapp</span>
                   <ShareIcon />
                 </a>
               </Button>
@@ -103,7 +103,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
                 aria-disabled="true"
                 tabIndex={-1}
               >
-                <span>Compartilhar</span>
+                <span>Compartilhar no Whatsapp</span>
                 <ShareIcon />
               </Button>
             )}
