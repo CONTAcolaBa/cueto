@@ -385,6 +385,9 @@ function PixDonationSection({ pixKey, slug }: { pixKey: string; slug: string }) 
           </span>
         </span>
       </button>
+      <p className="mt-3 text-base font-normal text-public-muted-foreground">
+        Os valores doados vão direto para o criador(a) da campanha
+      </p>
     </section>
   );
 }
