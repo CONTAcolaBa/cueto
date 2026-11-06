@@ -366,13 +366,13 @@ function PixDonationSection({ pixKey, slug }: { pixKey: string; slug: string }) 
       >
         Prefere doar direto via Pix?
       </h2>
-      <p className="mt-2 text-sm text-[#55705a] sm:text-base">
+      <p className="mt-1 text-sm text-[#55705a] sm:text-base">
         Clique abaixo para copiar a chave
       </p>
       <button
         type="button"
         onClick={handleCopy}
-        className="mt-7 flex w-full max-w-sm items-center gap-3 rounded-[24px] bg-[#2e7d32] px-5 py-4 text-left text-white shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#246428] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2e7d32] focus-visible:ring-offset-2 active:scale-[0.99]"
+        className="mt-4 flex w-full max-w-sm items-center gap-3 rounded-[24px] bg-[#2e7d32] px-5 py-4 text-left text-white shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#246428] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2e7d32] focus-visible:ring-offset-2 active:scale-[0.99]"
         aria-label={`Copiar chave Pix ${pixKey}`}
       >
         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/15">
@@ -385,7 +385,7 @@ function PixDonationSection({ pixKey, slug }: { pixKey: string; slug: string }) 
           </span>
         </span>
       </button>
-      <p className="mt-3 text-base font-normal text-public-muted-foreground">
+      <p className="mt-2 text-sm font-normal text-public-muted-foreground">
         Os valores doados vão direto para o criador(a) da campanha
       </p>
     </section>
