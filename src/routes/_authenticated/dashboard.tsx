@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { RichTextEditor } from "@/components/RichTextEditor";
 import { DashboardThemeToggle } from "@/components/DashboardThemeToggle";
 import {
   Dialog,
@@ -523,11 +524,11 @@ function Dashboard() {
             </Field>
 
             <Field label="Descrição" id="description">
-              <Textarea
+              <RichTextEditor
+                key={form.id ?? "new"}
                 id="description"
-                rows={4}
                 value={form.description}
-                onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                onChange={(html) => setForm((f) => ({ ...f, description: html }))}
               />
             </Field>
 

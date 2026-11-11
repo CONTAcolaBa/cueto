@@ -7,6 +7,7 @@ import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-re
 import { Link } from "@tanstack/react-router";
 import { getScriptEmbedDoc, getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
 import { cn } from "@/lib/utils";
+import { RichDescription } from "@/components/RichDescription";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -118,9 +119,10 @@ export function PageTemplate({ page }: { page: PageContent }) {
         ) : null}
 
         {page.description ? (
-          <p className="mt-6 whitespace-pre-line text-lg font-medium leading-relaxed text-public-muted-foreground">
-            {page.description}
-          </p>
+          <RichDescription
+            value={page.description}
+            className="mt-6 text-lg font-medium leading-relaxed text-public-muted-foreground"
+          />
         ) : null}
 
         <PixDonationSection pixKey={page.pix_key} slug={page.slug} />
