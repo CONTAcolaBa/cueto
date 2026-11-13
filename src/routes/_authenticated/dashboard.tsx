@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { RichTextEditor } from "@/components/RichTextEditor";
@@ -152,6 +153,7 @@ type FormState = {
   description: string;
   image_url: string;
   video_format: VideoFormat;
+  show_verified_badge: boolean;
   share_link: string;
   slug: string;
   comments: PageComment[];
@@ -168,6 +170,7 @@ const emptyForm: FormState = {
   description: "",
   image_url: "",
   video_format: "horizontal",
+  show_verified_badge: true,
   share_link: "",
   slug: "",
   comments: [],
@@ -223,6 +226,7 @@ function Dashboard() {
         description: values.description,
         image_url: values.image_url,
         video_format: values.video_format,
+        show_verified_badge: values.show_verified_badge,
         button_text: "Fazer uma Doação",
         button_link: values.share_link.trim() || "#",
         comments: values.comments,
@@ -283,6 +287,7 @@ function Dashboard() {
       description: page.description ?? "",
       image_url: page.image_url ?? "",
       video_format: page.video_format,
+      show_verified_badge: page.show_verified_badge !== false,
       share_link: page.button_link && page.button_link !== "#" ? page.button_link : "",
       slug: page.slug,
       comments: page.comments,
@@ -539,6 +544,20 @@ function Dashboard() {
               format={form.video_format}
               onFormatChange={(video_format) => setForm((f) => ({ ...f, video_format }))}
             />
+
+            <div className="flex items-center justify-between gap-4 rounded-lg border border-border p-3">
+              <div className="space-y-0.5">
+                <Label htmlFor="show_verified_badge">Etiqueta "verificada"</Label>
+                <p className="text-xs text-muted-foreground">
+                  Mostra o selo verde de verificação sobre a imagem principal da página.
+                </p>
+              </div>
+              <Switch
+                id="show_verified_badge"
+                checked={form.show_verified_badge}
+                onCheckedChange={(checked) => setForm((f) => ({ ...f, show_verified_badge: checked }))}
+              />
+            </div>
 
             <Field label="Link do botão Compartilhar" id="share_link">
               <Input

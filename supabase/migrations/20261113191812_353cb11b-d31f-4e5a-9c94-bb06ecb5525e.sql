@@ -1,0 +1,1 @@
+ALTER TABLE public.pages ADD COLUMN show_verified_badge boolean NOT NULL DEFAULT true;

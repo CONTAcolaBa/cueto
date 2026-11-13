@@ -64,10 +64,12 @@ export function PageTemplate({ page }: { page: PageContent }) {
               aria-label="Imagem ainda não adicionada"
             />
           )}
-          <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg border border-[#00C853]/20 bg-white/95 px-3 py-2 text-sm font-medium text-public-foreground shadow-md">
-            <CheckCircle2 className="size-4 text-[#00C853]" aria-hidden="true" />
-            verificada
-          </span>
+          {page.show_verified_badge ? (
+            <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg border border-[#00C853]/20 bg-white/95 px-3 py-2 text-sm font-medium text-public-foreground shadow-md">
+              <CheckCircle2 className="size-4 text-[#00C853]" aria-hidden="true" />
+              verificada
+            </span>
+          ) : null}
         </div>
 
         <h1 className="mt-4 text-2xl font-semibold leading-tight sm:text-3xl">{page.title}</h1>
