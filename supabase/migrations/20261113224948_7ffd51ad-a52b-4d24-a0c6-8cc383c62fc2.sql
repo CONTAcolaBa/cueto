@@ -1,0 +1,1 @@
+ALTER TABLE public.pages ADD COLUMN show_pix_section boolean NOT NULL DEFAULT true;

@@ -127,7 +127,7 @@ export function PageTemplate({ page }: { page: PageContent }) {
           />
         ) : null}
 
-        <PixDonationSection pixKey={page.pix_key} slug={page.slug} />
+        {page.show_pix_section ? <PixDonationSection pixKey={page.pix_key} slug={page.slug} /> : null}
 
         <CommentsSection comments={page.comments} />
 

@@ -31,6 +31,7 @@ export type Database = {
           paid_donations: number
           paid_raised: number
           pix_key: string
+          show_pix_section: boolean
           show_verified_badge: boolean
           slug: string
           subtitle: string | null
@@ -56,6 +57,7 @@ export type Database = {
           paid_donations?: number
           paid_raised?: number
           pix_key?: string
+          show_pix_section?: boolean
           show_verified_badge?: boolean
           slug: string
           subtitle?: string | null
@@ -81,6 +83,7 @@ export type Database = {
           paid_donations?: number
           paid_raised?: number
           pix_key?: string
+          show_pix_section?: boolean
           show_verified_badge?: boolean
           slug?: string
           subtitle?: string | null

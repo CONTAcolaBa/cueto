@@ -23,6 +23,7 @@ export type PageRecord = {
   image_url: string | null;
   video_format: VideoFormat;
   show_verified_badge: boolean;
+  show_pix_section: boolean;
   button_text: string;
   button_link: string;
   visits: number;
@@ -47,6 +48,7 @@ export type PageContent = Pick<
   | "image_url"
   | "video_format"
   | "show_verified_badge"
+  | "show_pix_section"
   | "button_text"
   | "button_link"
   | "comments"
@@ -64,6 +66,7 @@ export type PageInput = {
   image_url: string;
   video_format?: VideoFormat;
   show_verified_badge?: boolean;
+  show_pix_section?: boolean;
   button_text: string;
   button_link: string;
   comments?: PageComment[];
@@ -125,6 +128,7 @@ function validate(input: PageInput): PageInput {
     image_url: (input.image_url ?? "").trim(),
     video_format: normalizeVideoFormat(input.video_format),
     show_verified_badge: input.show_verified_badge !== false,
+    show_pix_section: input.show_pix_section !== false,
     button_text: (input.button_text ?? "").trim() || "Saiba mais",
     button_link: (input.button_link ?? "").trim() || "#",
     comments: validateComments(input.comments),
@@ -152,7 +156,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
     const { data: page, error } = await supabaseAdmin
       .from("pages")
       .select(
-        "slug, title, subtitle, description, image_url, video_format, show_verified_badge, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key",
+        "slug, title, subtitle, description, image_url, video_format, show_verified_badge, show_pix_section, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key",
       )
       .eq("slug", data.slug)
       .maybeSingle();
@@ -177,6 +181,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
       image_url: page.image_url,
       video_format: normalizeVideoFormat(page.video_format),
       show_verified_badge: page.show_verified_badge !== false,
+      show_pix_section: page.show_pix_section !== false,
       button_text: page.button_text,
       button_link: page.button_link,
       comments: (page.comments ?? []) as PageComment[],
@@ -203,7 +208,7 @@ export const listMyPages = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("pages")
       .select(
-        "id, slug, title, subtitle, description, image_url, video_format, show_verified_badge, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key, created_at",
+        "id, slug, title, subtitle, description, image_url, video_format, show_verified_badge, show_pix_section, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key, created_at",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
@@ -234,6 +239,7 @@ export const createPage = createServerFn({ method: "POST" })
       image_url: data.image_url || null,
       video_format: normalizeVideoFormat(data.video_format),
       show_verified_badge: data.show_verified_badge !== false,
+      show_pix_section: data.show_pix_section !== false,
       button_text: data.button_text,
       button_link: data.button_link,
       comments: data.comments ?? [],
@@ -270,6 +276,7 @@ export const updatePage = createServerFn({ method: "POST" })
         image_url: data.image_url || null,
         video_format: normalizeVideoFormat(data.video_format),
         show_verified_badge: data.show_verified_badge !== false,
+        show_pix_section: data.show_pix_section !== false,
         button_text: data.button_text,
         button_link: data.button_link,
         comments: data.comments ?? [],

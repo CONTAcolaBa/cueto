@@ -154,6 +154,7 @@ type FormState = {
   image_url: string;
   video_format: VideoFormat;
   show_verified_badge: boolean;
+  show_pix_section: boolean;
   share_link: string;
   slug: string;
   comments: PageComment[];
@@ -171,6 +172,7 @@ const emptyForm: FormState = {
   image_url: "",
   video_format: "horizontal",
   show_verified_badge: true,
+  show_pix_section: true,
   share_link: "",
   slug: "",
   comments: [],
@@ -227,6 +229,7 @@ function Dashboard() {
         image_url: values.image_url,
         video_format: values.video_format,
         show_verified_badge: values.show_verified_badge,
+        show_pix_section: values.show_pix_section,
         button_text: "Fazer uma Doação",
         button_link: values.share_link.trim() || "#",
         comments: values.comments,
@@ -288,6 +291,7 @@ function Dashboard() {
       image_url: page.image_url ?? "",
       video_format: page.video_format,
       show_verified_badge: page.show_verified_badge !== false,
+      show_pix_section: page.show_pix_section !== false,
       share_link: page.button_link && page.button_link !== "#" ? page.button_link : "",
       slug: page.slug,
       comments: page.comments,
@@ -578,6 +582,20 @@ function Dashboard() {
                 onChange={(e) => setForm((f) => ({ ...f, pix_key: e.target.value }))}
               />
             </Field>
+
+            <div className="flex items-center justify-between gap-4 rounded-lg border border-border p-3">
+              <div className="space-y-0.5">
+                <Label htmlFor="show_pix_section">Sessão "Copiar chave Pix"</Label>
+                <p className="text-xs text-muted-foreground">
+                  Mostra a sessão com a chave Pix e o botão de copiar na página pública.
+                </p>
+              </div>
+              <Switch
+                id="show_pix_section"
+                checked={form.show_pix_section}
+                onCheckedChange={(checked) => setForm((f) => ({ ...f, show_pix_section: checked }))}
+              />
+            </div>
 
             <section className="space-y-3 border-t border-border pt-5" aria-labelledby="counters-title">
               <h3 id="counters-title" className="text-sm font-semibold text-foreground">Contadores de arrecadação</h3>
