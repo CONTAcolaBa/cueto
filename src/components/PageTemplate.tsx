@@ -727,9 +727,19 @@ function CommentCarousel({ comments }: { comments: PageComment[] }) {
   );
 }
 
+function formatAudioTime(seconds: number) {
+  if (!Number.isFinite(seconds) || seconds < 0) return "00:00";
+  const total = Math.floor(seconds);
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
 function AudioPlayer({ src }: { src: string }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   function toggle() {
     const audio = audioRef.current;
@@ -738,21 +748,51 @@ function AudioPlayer({ src }: { src: string }) {
     else audio.pause();
   }
 
+  function seek(value: number) {
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
+    audio.currentTime = value;
+    setCurrent(value);
+  }
+
+  const percent = duration ? Math.min(100, (current / duration) * 100) : 0;
+
   return (
-    <div className="mt-6 flex items-center gap-4 rounded-[16px] border border-public-border bg-public-background p-4 shadow-sm">
+    <div className="mt-5 flex items-center gap-3 rounded-[12px] border border-public-border bg-public-background px-3 py-2 shadow-sm">
       <button
         type="button"
         onClick={toggle}
         aria-label={playing ? "Pausar áudio" : "Ouvir áudio"}
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-donation text-donation-foreground"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-donation text-donation-foreground"
       >
-        {playing ? <Pause className="h-5 w-5" fill="currentColor" /> : <Play className="ml-0.5 h-5 w-5" fill="currentColor" />}
+        {playing ? <Pause className="h-4 w-4" fill="currentColor" /> : <Play className="ml-0.5 h-4 w-4" fill="currentColor" />}
       </button>
-      <span className="text-base font-semibold text-public-foreground">{playing ? "Ouvindo..." : "Ouvir"}</span>
+      {!playing && current === 0 ? (
+        <span className="shrink-0 text-sm font-semibold text-public-foreground">Ouvir</span>
+      ) : null}
+      <input
+        type="range"
+        min={0}
+        max={duration || 0}
+        step={0.1}
+        value={current}
+        onChange={(e) => seek(Number(e.target.value))}
+        aria-label="Progresso do áudio"
+        className="h-1.5 min-w-0 flex-1 cursor-pointer appearance-none rounded-full accent-donation"
+        style={{
+          background: `linear-gradient(to right, var(--donation) ${percent}%, var(--public-border) ${percent}%)`,
+        }}
+      />
+      <span className="shrink-0 text-xs tabular-nums text-public-muted-foreground">
+        {formatAudioTime(current)} / {formatAudioTime(duration)}
+      </span>
       <audio
         ref={audioRef}
         src={src}
-        preload="none"
+        preload="metadata"
+        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+        onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+        onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)}
