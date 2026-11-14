@@ -1,0 +1,1 @@
+ALTER TABLE public.pages ADD COLUMN audio_url text;

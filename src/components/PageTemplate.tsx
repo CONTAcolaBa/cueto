@@ -1,9 +1,9 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { PixCheckout } from "@/components/PixCheckout";
 import type { PageComment, PageContent, PageFaq } from "@/lib/pages.functions";
 import { trackPageClick } from "@/lib/pages.functions";
-import { Check, CheckCircle2, ChevronDown, Copy, Menu, Send, X } from "lucide-react";
+import { Check, CheckCircle2, ChevronDown, Copy, Menu, Pause, Play, Send, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { getScriptEmbedDoc, getVideoEmbedSrc, isVideoEmbed } from "@/lib/media";
 import { cn } from "@/lib/utils";
@@ -112,6 +112,8 @@ export function PageTemplate({ page }: { page: PageContent }) {
             )}
           </div>
         </div>
+
+        {page.audio_url ? <AudioPlayer src={page.audio_url} /> : null}
 
         {page.subtitle ? (
           <h2 className="mt-8 flex items-start gap-3 text-xl font-normal leading-tight sm:text-2xl">
@@ -721,6 +723,40 @@ function CommentCarousel({ comments }: { comments: PageComment[] }) {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+function AudioPlayer({ src }: { src: string }) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  function toggle() {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) void audio.play().catch(() => setPlaying(false));
+    else audio.pause();
+  }
+
+  return (
+    <div className="mt-6 flex items-center gap-4 rounded-[16px] border border-public-border bg-public-background p-4 shadow-sm">
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={playing ? "Pausar áudio" : "Ouvir áudio"}
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-donation text-donation-foreground"
+      >
+        {playing ? <Pause className="h-5 w-5" fill="currentColor" /> : <Play className="ml-0.5 h-5 w-5" fill="currentColor" />}
+      </button>
+      <span className="text-base font-semibold text-public-foreground">{playing ? "Ouvindo..." : "Ouvir"}</span>
+      <audio
+        ref={audioRef}
+        src={src}
+        preload="none"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onEnded={() => setPlaying(false)}
+      />
     </div>
   );
 }

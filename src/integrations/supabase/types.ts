@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       pages: {
         Row: {
+          audio_url: string | null
           base_donations: number
           base_raised: number
           button_link: string
@@ -42,6 +43,7 @@ export type Database = {
           visits: number
         }
         Insert: {
+          audio_url?: string | null
           base_donations?: number
           base_raised?: number
           button_link?: string
@@ -68,6 +70,7 @@ export type Database = {
           visits?: number
         }
         Update: {
+          audio_url?: string | null
           base_donations?: number
           base_raised?: number
           button_link?: string

@@ -155,6 +155,7 @@ type FormState = {
   video_format: VideoFormat;
   show_verified_badge: boolean;
   show_pix_section: boolean;
+  audio_url: string;
   share_link: string;
   slug: string;
   comments: PageComment[];
@@ -173,6 +174,7 @@ const emptyForm: FormState = {
   video_format: "horizontal",
   show_verified_badge: true,
   show_pix_section: true,
+  audio_url: "",
   share_link: "",
   slug: "",
   comments: [],
@@ -230,6 +232,7 @@ function Dashboard() {
         video_format: values.video_format,
         show_verified_badge: values.show_verified_badge,
         show_pix_section: values.show_pix_section,
+        audio_url: values.audio_url,
         button_text: "Fazer uma Doação",
         button_link: values.share_link.trim() || "#",
         comments: values.comments,
@@ -292,6 +295,7 @@ function Dashboard() {
       video_format: page.video_format,
       show_verified_badge: page.show_verified_badge !== false,
       show_pix_section: page.show_pix_section !== false,
+      audio_url: page.audio_url ?? "",
       share_link: page.button_link && page.button_link !== "#" ? page.button_link : "",
       slug: page.slug,
       comments: page.comments,
@@ -522,6 +526,17 @@ function Dashboard() {
               <p className="text-xs text-muted-foreground">
                 {origin.replace(/^https?:\/\//, "")}/p/{form.slug || "seu-slug"}
               </p>
+            </Field>
+
+            <Field label="Áudio (opcional)" id="audio_url">
+              <Input
+                id="audio_url"
+                type="url"
+                placeholder="https://exemplo.com/audio.mp3"
+                value={form.audio_url}
+                onChange={(e) => setForm((f) => ({ ...f, audio_url: e.target.value }))}
+              />
+              <p className="text-xs text-muted-foreground">Link direto do arquivo de áudio. Deixe vazio para não exibir o player.</p>
             </Field>
 
             <Field label="Subtítulo" id="subtitle">

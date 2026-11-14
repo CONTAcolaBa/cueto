@@ -24,6 +24,7 @@ export type PageRecord = {
   video_format: VideoFormat;
   show_verified_badge: boolean;
   show_pix_section: boolean;
+  audio_url: string | null;
   button_text: string;
   button_link: string;
   visits: number;
@@ -49,6 +50,7 @@ export type PageContent = Pick<
   | "video_format"
   | "show_verified_badge"
   | "show_pix_section"
+  | "audio_url"
   | "button_text"
   | "button_link"
   | "comments"
@@ -67,6 +69,7 @@ export type PageInput = {
   video_format?: VideoFormat;
   show_verified_badge?: boolean;
   show_pix_section?: boolean;
+  audio_url?: string;
   button_text: string;
   button_link: string;
   comments?: PageComment[];
@@ -129,6 +132,7 @@ function validate(input: PageInput): PageInput {
     video_format: normalizeVideoFormat(input.video_format),
     show_verified_badge: input.show_verified_badge !== false,
     show_pix_section: input.show_pix_section !== false,
+    audio_url: normalizeAudioUrl(input.audio_url),
     button_text: (input.button_text ?? "").trim() || "Saiba mais",
     button_link: (input.button_link ?? "").trim() || "#",
     comments: validateComments(input.comments),
@@ -138,6 +142,13 @@ function validate(input: PageInput): PageInput {
     goal: Math.max(1, Number(input.goal) || 45000),
     pix_key: (input.pix_key ?? "").trim() || "vaquinhasolidaria@gmail.com",
   };
+}
+
+function normalizeAudioUrl(value: unknown): string {
+  const url = String(value ?? "").trim();
+  if (!url) return "";
+  if (!/^https:\/\//i.test(url)) throw new Error("O link do áudio deve começar com https://.");
+  return url;
 }
 
 function isDuplicateSlug(error: { code?: string; message?: string } | null) {
@@ -156,7 +167,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
     const { data: page, error } = await supabaseAdmin
       .from("pages")
       .select(
-        "slug, title, subtitle, description, image_url, video_format, show_verified_badge, show_pix_section, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key",
+        "slug, title, subtitle, description, image_url, video_format, show_verified_badge, show_pix_section, audio_url, button_text, button_link, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key",
       )
       .eq("slug", data.slug)
       .maybeSingle();
@@ -182,6 +193,7 @@ export const getPublicPageAndTrackVisit = createServerFn({ method: "GET" })
       video_format: normalizeVideoFormat(page.video_format),
       show_verified_badge: page.show_verified_badge !== false,
       show_pix_section: page.show_pix_section !== false,
+      audio_url: page.audio_url || null,
       button_text: page.button_text,
       button_link: page.button_link,
       comments: (page.comments ?? []) as PageComment[],
@@ -208,7 +220,7 @@ export const listMyPages = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("pages")
       .select(
-        "id, slug, title, subtitle, description, image_url, video_format, show_verified_badge, show_pix_section, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key, created_at",
+        "id, slug, title, subtitle, description, image_url, video_format, show_verified_badge, show_pix_section, audio_url, button_text, button_link, visits, clicks, comments, faqs, base_raised, base_donations, goal, paid_raised, paid_donations, pix_key, created_at",
       )
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
@@ -240,6 +252,7 @@ export const createPage = createServerFn({ method: "POST" })
       video_format: normalizeVideoFormat(data.video_format),
       show_verified_badge: data.show_verified_badge !== false,
       show_pix_section: data.show_pix_section !== false,
+      audio_url: data.audio_url || null,
       button_text: data.button_text,
       button_link: data.button_link,
       comments: data.comments ?? [],
@@ -277,6 +290,7 @@ export const updatePage = createServerFn({ method: "POST" })
         video_format: normalizeVideoFormat(data.video_format),
         show_verified_badge: data.show_verified_badge !== false,
         show_pix_section: data.show_pix_section !== false,
+        audio_url: data.audio_url || null,
         button_text: data.button_text,
         button_link: data.button_link,
         comments: data.comments ?? [],
