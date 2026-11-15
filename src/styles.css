@@ -236,3 +236,16 @@ html:has(.public-theme) {
     color: var(--color-foreground);
   }
 }
+
+/* Ondas decorativas do player de áudio (sem sincronia com o som). */
+@keyframes audio-wave {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+.audio-wave-bar {
+  transform-origin: center;
+  animation: audio-wave 1s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .audio-wave-bar { animation: none; }
+}

@@ -806,19 +806,37 @@ function AudioPlayer({ src }: { src: string }) {
       {!playing && current === 0 ? (
         <span className="shrink-0 text-sm font-semibold text-public-foreground">Ouvir</span>
       ) : null}
-      <input
-        type="range"
-        min={0}
-        max={duration || 0}
-        step={0.1}
-        value={current}
-        onChange={(e) => seek(Number(e.target.value))}
+      <div
+        role="slider"
+        tabIndex={playing ? 0 : -1}
         aria-label="Progresso do áudio"
-        className="h-1.5 min-w-0 flex-1 cursor-pointer appearance-none rounded-full accent-donation"
-        style={{
-          background: `linear-gradient(to right, var(--donation) ${percent}%, var(--public-border) ${percent}%)`,
+        aria-valuemin={0}
+        aria-valuemax={Math.round(duration)}
+        aria-valuenow={Math.round(current)}
+        aria-hidden={!playing}
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          seek(((e.clientX - rect.left) / rect.width) * duration);
         }}
-      />
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight") seek(Math.min(duration, current + 5));
+          if (e.key === "ArrowLeft") seek(Math.max(0, current - 5));
+        }}
+        className={`flex h-7 min-w-0 flex-1 cursor-pointer items-center gap-[2px] transition-opacity duration-300 ${playing ? "opacity-100" : "pointer-events-none opacity-0"}`}
+      >
+        {WAVE_BARS.map((h, i) => (
+          <span
+            key={i}
+            className={`audio-wave-bar flex-1 rounded-full ${(i / WAVE_BARS.length) * 100 < percent ? "bg-donation" : "bg-public-border"}`}
+            style={{
+              height: `${h}%`,
+              animationDelay: `${(i % 7) * -0.13}s`,
+              animationDuration: `${0.8 + (i % 5) * 0.15}s`,
+              animationPlayState: playing ? "running" : "paused",
+            }}
+          />
+        ))}
+      </div>
       <span className="shrink-0 text-xs tabular-nums text-public-muted-foreground">
         {formatAudioTime(current)} / {formatAudioTime(duration)}
       </span>
@@ -830,3 +848,5 @@ function AudioPlayer({ src }: { src: string }) {
     </div>
   );
 }
+
+const WAVE_BARS = [40, 65, 85, 55, 95, 70, 45, 80, 60, 100, 75, 50, 90, 65, 40, 70, 95, 55, 80, 45, 85, 60, 100, 70, 50, 75, 90, 55, 65, 40];
