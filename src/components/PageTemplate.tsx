@@ -767,28 +767,25 @@ function AudioPlayer({ src }: { src: string }) {
       >
         {playing ? <Pause className="h-4 w-4" fill="currentColor" /> : <Play className="ml-0.5 h-4 w-4" fill="currentColor" />}
       </button>
-      {!playing ? (
+      {!playing && current === 0 ? (
         <span className="shrink-0 text-sm font-semibold text-public-foreground">Ouvir</span>
-      ) : (
-        <>
-          <input
-            type="range"
-            min={0}
-            max={duration || 0}
-            step={0.1}
-            value={current}
-            onChange={(e) => seek(Number(e.target.value))}
-            aria-label="Progresso do áudio"
-            className="h-1.5 min-w-0 flex-1 cursor-pointer appearance-none rounded-full accent-donation"
-            style={{
-              background: `linear-gradient(to right, var(--donation) ${percent}%, var(--public-border) ${percent}%)`,
-            }}
-          />
-          <span className="shrink-0 text-xs tabular-nums text-public-muted-foreground">
-            {formatAudioTime(current)} / {formatAudioTime(duration)}
-          </span>
-        </>
-      )}
+      ) : null}
+      <input
+        type="range"
+        min={0}
+        max={duration || 0}
+        step={0.1}
+        value={current}
+        onChange={(e) => seek(Number(e.target.value))}
+        aria-label="Progresso do áudio"
+        className="h-1.5 min-w-0 flex-1 cursor-pointer appearance-none rounded-full accent-donation"
+        style={{
+          background: `linear-gradient(to right, var(--donation) ${percent}%, var(--public-border) ${percent}%)`,
+        }}
+      />
+      <span className="shrink-0 text-xs tabular-nums text-public-muted-foreground">
+        {formatAudioTime(current)} / {formatAudioTime(duration)}
+      </span>
       <audio
         ref={audioRef}
         src={src}
