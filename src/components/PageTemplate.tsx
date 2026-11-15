@@ -741,6 +741,41 @@ function AudioPlayer({ src }: { src: string }) {
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
 
+  // Listen natively: with SSR the metadata can load before React hydrates,
+  // so JSX event handlers would miss it.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const readDuration = () => {
+      const d = audio.duration;
+      if (Number.isFinite(d) && d > 0) setDuration(d);
+    };
+    const onTime = () => {
+      setCurrent(audio.currentTime);
+      readDuration();
+    };
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
+    audio.addEventListener("loadedmetadata", readDuration);
+    audio.addEventListener("durationchange", readDuration);
+    audio.addEventListener("canplay", readDuration);
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+    audio.addEventListener("ended", onPause);
+    if (audio.readyState >= 1) readDuration();
+    else audio.load();
+    return () => {
+      audio.removeEventListener("loadedmetadata", readDuration);
+      audio.removeEventListener("durationchange", readDuration);
+      audio.removeEventListener("canplay", readDuration);
+      audio.removeEventListener("timeupdate", onTime);
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
+      audio.removeEventListener("ended", onPause);
+    };
+  }, [src]);
+
   function toggle() {
     const audio = audioRef.current;
     if (!audio) return;
@@ -751,6 +786,7 @@ function AudioPlayer({ src }: { src: string }) {
   function seek(value: number) {
     const audio = audioRef.current;
     if (!audio || !duration) return;
+    if (!Number.isFinite(value)) return;
     audio.currentTime = value;
     setCurrent(value);
   }
@@ -790,12 +826,6 @@ function AudioPlayer({ src }: { src: string }) {
         ref={audioRef}
         src={src}
         preload="metadata"
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-        onDurationChange={(e) => setDuration(e.currentTarget.duration)}
-        onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onEnded={() => setPlaying(false)}
       />
     </div>
   );
