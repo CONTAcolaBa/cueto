@@ -497,7 +497,8 @@ function ShieldIcon() {
 
 export function DonationPage({ slug }: { slug?: string | undefined } = {}) {
   const [amount, setAmount] = useState(0);
-  const [anonymous, setAnonymous] = useState(false);
+  const [wantsUpdates, setWantsUpdates] = useState(false);
+  const [whatsapp, setWhatsapp] = useState("");
   const suggestedAmounts = [25, 30, 50, 100, 200, 300];
   const formattedAmount = amount.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
@@ -530,14 +531,31 @@ export function DonationPage({ slug }: { slug?: string | undefined } = {}) {
             <span className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-donation-soft transition-colors has-[:checked]:bg-donation">
               <input
                 type="checkbox"
-                checked={anonymous}
-                onChange={(event) => setAnonymous(event.target.checked)}
+                checked={wantsUpdates}
+                onChange={(event) => setWantsUpdates(event.target.checked)}
                 className="peer sr-only"
               />
               <span className="pointer-events-none absolute left-1 size-4 rounded-full bg-donation transition-transform peer-checked:translate-x-5 peer-checked:bg-white" />
             </span>
-            Doação Anônima 
+            Deseja receber atualizações desta campanha?
           </label>
+          {wantsUpdates ? (
+            <div className="mt-4">
+              <label htmlFor="donation-whatsapp" className="text-base font-semibold">
+                Informe um número de WhatsApp (Opcional)
+              </label>
+              <input
+                id="donation-whatsapp"
+                type="tel"
+                inputMode="tel"
+                maxLength={20}
+                value={whatsapp}
+                onChange={(event) => setWhatsapp(event.target.value.replace(/[^0-9()+\s-]/g, ""))}
+                placeholder="(11) 91234-5678"
+                className="mt-2 h-14 w-full rounded-2xl border-2 border-donation bg-public-background px-4 text-lg text-public-foreground outline-none placeholder:text-public-muted-foreground focus:ring-2 focus:ring-donation/30"
+              />
+            </div>
+          ) : null}
 
           <h2 className="mt-9 font-[Nunito,ui-rounded,'Arial Rounded MT Bold',sans-serif] text-2xl font-semibold sm:text-3xl">Valores sugeridos</h2>
           <div className="mt-4 grid grid-cols-3 gap-3 sm:gap-4">
@@ -559,7 +577,7 @@ export function DonationPage({ slug }: { slug?: string | undefined } = {}) {
             <span>Total:</span>
             <span>{formattedAmount}</span>
           </div>
-          <PixCheckout amount={amount} slug={slug} />
+          <PixCheckout amount={amount} slug={slug} whatsapp={wantsUpdates ? whatsapp : ""} />
         </div>
       </section>
 

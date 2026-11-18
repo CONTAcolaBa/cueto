@@ -23,6 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import { LeadsSheets } from "@/components/LeadsSheets";
 import { DashboardThemeToggle } from "@/components/DashboardThemeToggle";
 import {
   Dialog,
@@ -478,6 +479,7 @@ function Dashboard() {
             ))}
           </section>
         )}
+        <LeadsSheets pages={pages} />
       </main>
 
       <Dialog open={formOpen} onOpenChange={setFormOpen}>

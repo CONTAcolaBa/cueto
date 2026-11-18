@@ -5,7 +5,7 @@ import { createPixPayment, getPixStatus } from "@/lib/pix.functions";
 
 type Pix = { externalId: string; code: string; qrcodeBase64: string };
 
-export function PixCheckout({ amount, slug }: { amount: number; slug?: string | undefined }) {
+export function PixCheckout({ amount, slug, whatsapp = "" }: { amount: number; slug?: string | undefined; whatsapp?: string }) {
   const createFn = useServerFn(createPixPayment);
   const statusFn = useServerFn(getPixStatus);
   const [pix, setPix] = useState<Pix | null>(null);
@@ -32,10 +32,15 @@ export function PixCheckout({ amount, slug }: { amount: number; slug?: string | 
       setError("Informe um valor de pelo menos R$ 10,00.");
       return;
     }
+    const digits = whatsapp.replace(/\D/g, "");
+    if (digits && (digits.length < 10 || digits.length > 13)) {
+      setError("Informe um WhatsApp válido com DDD.");
+      return;
+    }
     setError("");
     setLoading(true);
     try {
-      setPix(await createFn({ data: slug ? { amount, slug } : { amount } }));
+      setPix(await createFn({ data: slug ? { amount, slug, ...(digits ? { whatsapp: digits } : {}) } : { amount } }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro ao gerar o Pix.");
     } finally {

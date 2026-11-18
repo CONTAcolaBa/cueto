@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      campaign_leads: {
+        Row: {
+          created_at: string
+          id: string
+          slug: string
+          whatsapp: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          slug: string
+          whatsapp: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          slug?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           audio_url: string | null

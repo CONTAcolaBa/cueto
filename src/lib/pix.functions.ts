@@ -18,13 +18,17 @@ function getHeaders() {
 
 export const createPixPayment = createServerFn({ method: "POST" })
   .inputValidator((input) =>
-    z.object({ amount: z.number().min(10).max(100000), slug: z.string().regex(/^[a-z0-9-]+$/).max(80).optional() }).parse(input),
+    z.object({ amount: z.number().min(10).max(100000), slug: z.string().regex(/^[a-z0-9-]+$/).max(80).optional(), whatsapp: z.string().regex(/^\d{10,13}$/).optional() }).parse(input),
   )
   .handler(async ({ data }) => {
     if (data.slug) {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       const { data: page } = await supabaseAdmin.from("pages").select("id").eq("slug", data.slug).maybeSingle();
       if (!page) throw new Error("Campanha não encontrada.");
+      if (data.whatsapp) {
+        const { error } = await supabaseAdmin.from("campaign_leads").insert({ slug: data.slug, whatsapp: data.whatsapp });
+        if (error) console.error("lead insert error", error);
+      }
     }
     const externalId = `doacao_${Date.now()}_${crypto.randomUUID().slice(0, 8)}`;
     const res = await fetch(`${API_BASE}/v1/transactions`, {
