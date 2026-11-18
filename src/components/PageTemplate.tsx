@@ -536,7 +536,7 @@ export function DonationPage({ slug }: { slug?: string | undefined } = {}) {
               />
               <span className="pointer-events-none absolute left-1 size-4 rounded-full bg-donation transition-transform peer-checked:translate-x-5 peer-checked:bg-white" />
             </span>
-            Deseja receber atualizações desta campanha ?
+            Doação Anônima 
           </label>
 
           <h2 className="mt-9 font-[Nunito,ui-rounded,'Arial Rounded MT Bold',sans-serif] text-2xl font-semibold sm:text-3xl">Valores sugeridos</h2>
